@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/page";
+import Footer from "@/components/Footer/page";
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -33,7 +34,7 @@ export default function RootLayout({
       >
         <Navbar />
         {children}
-        
+        <Footer/>
         {/* Hidden Google Translate Element */}
         <div id="google_translate_element"></div>
 

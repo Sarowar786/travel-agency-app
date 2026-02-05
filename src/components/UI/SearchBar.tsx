@@ -89,9 +89,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       <div className="flex-1 w-full relative group">
         <button 
           onClick={() => setActiveDropdown(activeDropdown === 'destination' ? null : 'destination')}
-          className={`w-full text-left px-6 py-3 rounded-full hover:bg-brand-teal/5 transition-colors flex items-center gap-3 ${activeDropdown === 'destination' ? 'bg-brand-teal/5' : ''}`}
+          className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'destination' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <MapPin className="text-brand-teal w-5 h-5 flex-shrink-0" />
+          <MapPin className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
           <div className="flex flex-col w-full overflow-hidden">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Where to?</span>
             <div className="flex items-center justify-between">
@@ -134,9 +134,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         <button 
           onClick={() => destination && setActiveDropdown(activeDropdown === 'city' ? null : 'city')}
           disabled={!destination}
-          className={`w-full text-left px-6 py-3 rounded-full hover:bg-brand-teal/5 transition-colors flex items-center gap-3 ${activeDropdown === 'city' ? 'bg-brand-teal/5' : ''}`}
+          className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'city' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <Building2 className="text-brand-teal w-5 h-5 flex-shrink-0" />
+          <Building2 className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
           <div className="flex flex-col w-full overflow-hidden">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">City</span>
              <div className="flex items-center justify-between">
@@ -184,9 +184,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       <div className="flex-1 w-full relative group">
         <button 
           onClick={() => setActiveDropdown(activeDropdown === 'checkin' ? null : 'checkin')}
-          className={`w-full text-left px-6 py-3 rounded-full hover:bg-brand-teal/5 transition-colors flex items-center gap-3 ${activeDropdown === 'checkin' ? 'bg-brand-teal/5' : ''}`}
+          className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'checkin' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <CalendarIcon className="text-brand-teal w-5 h-5 flex-shrink-0" />
+          <CalendarIcon className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
           <div className="flex flex-col w-full">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Check-in</span>
             <span className={`font-bold truncate text-sm md:text-base ${checkIn ? 'text-brand-navy' : 'text-gray-300'}`}>
@@ -214,9 +214,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       <div className="flex-1 w-full relative group">
         <button 
           onClick={() => setActiveDropdown(activeDropdown === 'checkout' ? null : 'checkout')}
-          className={`w-full text-left px-6 py-3 rounded-full hover:bg-brand-teal/5 transition-colors flex items-center gap-3 ${activeDropdown === 'checkout' ? 'bg-brand-teal/5' : ''}`}
+          className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'checkout' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <CalendarIcon className="text-brand-teal w-5 h-5 flex-shrink-0" />
+          <CalendarIcon className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
           <div className="flex flex-col w-full">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Check-out</span>
              <span className={`font-bold truncate text-sm md:text-base ${checkOut ? 'text-brand-navy' : 'text-gray-300'}`}>
@@ -244,9 +244,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       <div className="flex-1 w-full relative group">
         <button 
           onClick={() => setActiveDropdown(activeDropdown === 'triptype' ? null : 'triptype')}
-          className={`w-full text-left px-6 py-3 rounded-full hover:bg-brand-teal/5 transition-colors flex items-center gap-3 ${activeDropdown === 'triptype' ? 'bg-brand-teal/5' : ''}`}
+          className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'triptype' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <Compass className="text-brand-teal w-5 h-5 flex-shrink-0" />
+          <Compass className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
           <div className="flex flex-col w-full overflow-hidden">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Trip Type</span>
             <div className="flex items-center justify-between">

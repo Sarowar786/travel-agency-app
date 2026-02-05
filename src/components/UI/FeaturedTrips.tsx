@@ -3,6 +3,7 @@ import React from 'react';
 import { FEATURED_TRIPS } from './constants';
 import { ArrowRight } from 'lucide-react';
 import TripCard from "./TripCard"
+import Link from 'next/link';
 
 // interface FeaturedTripsProps {
 //   onViewMore: () => void;
@@ -31,13 +32,12 @@ const FeaturedTrips: React.FC<any> = () => {
 
         {/* Standardized Button Style - Centered spacing */}
         <div className="flex justify-center mt-20 mb-20">
-            <button 
-              
+            <Link href={'/destinations'}
               className="group flex items-center gap-2 px-10 py-4 text-lg bg-brand-green text-brand-navy font-bold rounded-full shadow-lg hover:bg-[#8cc72b] hover:scale-105 transition-all duration-300"
             >
                 View More Packages
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
         </div>
       </div>
     </section>

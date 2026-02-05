@@ -65,7 +65,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onClick }) => {
                     {/* Little triangle arrow */}
                     <div className="absolute -top-1.5 right-4 w-3 h-3 bg-white border-t border-l border-gray-100 transform rotate-45"></div>
                     
-                    <p className="text-[10px] font-bold text-brand-teal uppercase tracking-wider mb-2 border-b border-gray-100 pb-1">Included Deals</p>
+                    <p className="text-[10px] font-bold text-[#0b4f4a] uppercase tracking-wider mb-2 border-b border-gray-100 pb-1">Included Deals</p>
                     <ul className="space-y-2">
                         {trip.offers.map((offer, idx) => (
                             <li key={idx} className="text-xs text-brand-navy font-medium flex items-start gap-2">
@@ -86,12 +86,12 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onClick }) => {
       <div className="p-6 flex flex-col flex-grow">
         {/* Location */}
         <div className="flex items-center gap-1 text-sm text-gray-500 mb-3 font-semibold">
-          <MapPin size={14} className="text-brand-teal" />
+          <MapPin size={14} className="text-[#0b4f4a]" />
           {trip.location}
         </div>
 
         {/* Title - Changed to Teal */}
-        <h3 className="text-2xl font-black text-brand-teal mb-4 uppercase tracking-tight leading-none transition-colors group-hover:text-brand-navy">
+        <h3 className="text-2xl font-black text-[#0b4f4a] mb-4 uppercase tracking-tight leading-none transition-colors group-hover:text-brand-navy">
           {trip.title}
         </h3>
 

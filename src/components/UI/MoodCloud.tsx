@@ -179,7 +179,7 @@ const MoodCloud: React.FC = () => {
       case "emoji":
         return "";
       case "hashtag":
-        return "text-brand-teal";
+        return "text-[#0b4f4a]";
       default:
         return "text-brand-navy";
     }
@@ -212,7 +212,7 @@ const MoodCloud: React.FC = () => {
                   item.type === "emoji"
                     ? "text-2xl md:text-3xl"
                     : item.type === "hashtag"
-                      ? "text-sm md:text-base font-medium bg-brand-teal/10 px-2 py-1 rounded-full"
+                      ? "text-sm md:text-base font-medium bg-[#0b4f4a]/10 px-2 py-1 rounded-full"
                       : "text-base md:text-lg"
                 }`}
                 style={{
@@ -301,7 +301,7 @@ const MoodCloud: React.FC = () => {
 
       {/* Subtle decorative elements */}
       <div className="absolute top-4 left-4 w-2 h-2 bg-brand-coral/30 rounded-full" />
-      <div className="absolute top-12 right-8 w-3 h-3 bg-brand-teal/20 rounded-full" />
+      <div className="absolute top-12 right-8 w-3 h-3 bg-[#0b4f4a]/20 rounded-full" />
       <div className="absolute bottom-8 left-12 w-2 h-2 bg-brand-green/30 rounded-full" />
       <div className="absolute bottom-16 right-16 w-1.5 h-1.5 bg-brand-coral/40 rounded-full" />
     </div>
