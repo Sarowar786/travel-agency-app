@@ -5,12 +5,11 @@ import { ArrowRight } from 'lucide-react';
 import TripCard from "./TripCard"
 import Link from 'next/link';
 
-// interface FeaturedTripsProps {
-//   onViewMore: () => void;
-//   onTripClick?: () => void;
-// }
+interface FeaturedTripsProps {
+  onTripClick?: () => void;
+}
 
-const FeaturedTrips: React.FC<any> = () => {
+const FeaturedTrips: React.FC<FeaturedTripsProps> = ({ onTripClick }) => {
   return (
     // Reduced bottom padding (pb-12) so the Cruise section follows naturally
     <section id="destinations" className="pt-24 pb-4 px-4 md:px-8 bg-white relative z-10">
@@ -26,7 +25,7 @@ const FeaturedTrips: React.FC<any> = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {FEATURED_TRIPS.map((trip) => (
-            <TripCard key={trip.id} trip={trip} />
+            <TripCard key={trip.id} trip={trip} onClick={onTripClick} />
           ))}
         </div>
 

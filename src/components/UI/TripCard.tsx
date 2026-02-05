@@ -18,7 +18,7 @@ const getTagIcon = (tag: string) => {
 // Helper to get brand color style for tag
 const getTagStyle = (tag: string) => {
   const t = tag.toLowerCase();
-  
+
   // DURATION TAGS (Color B)
   if (t.includes('night') || t.includes('day')) {
     return 'bg-gray-100 text-gray-700 border border-gray-200';
@@ -36,21 +36,21 @@ interface TripCardProps {
 
 const TripCard: React.FC<TripCardProps> = ({ trip, onClick }) => {
   return (
-    <div 
-        onClick={onClick}
-        className="bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 flex flex-col relative h-full cursor-pointer"
+    <div
+      onClick={onClick}
+      className="bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 flex flex-col relative h-full cursor-pointer"
     >
-      
+
       {/* Image Container */}
       <div className="relative h-64 overflow-hidden">
-        <img 
-          src={trip.image} 
+        <img
+          src={trip.image}
           alt={trip.title}
           loading="lazy"
-          decoding="async" 
+          decoding="async"
           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
         />
-        
+
         {/* Badge with Pop-up Tooltip */}
         {trip.badge && (
           <div className="absolute top-4 right-4 z-20 group/badge">
@@ -61,22 +61,22 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onClick }) => {
 
             {/* Tooltip Popup */}
             {trip.offers && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 p-4 opacity-0 translate-y-2 pointer-events-none group-hover/badge:opacity-100 group-hover/badge:translate-y-0 group-hover/badge:pointer-events-auto transition-all duration-300 ease-out z-30">
-                    {/* Little triangle arrow */}
-                    <div className="absolute -top-1.5 right-4 w-3 h-3 bg-white border-t border-l border-gray-100 transform rotate-45"></div>
-                    
-                    <p className="text-[10px] font-bold text-[#0b4f4a] uppercase tracking-wider mb-2 border-b border-gray-100 pb-1">Included Deals</p>
-                    <ul className="space-y-2">
-                        {trip.offers.map((offer, idx) => (
-                            <li key={idx} className="text-xs text-brand-navy font-medium flex items-start gap-2">
-                                <div className="mt-0.5 bg-brand-green/20 rounded-full p-0.5">
-                                   <Check size={8} className="text-brand-navy" strokeWidth={4} />
-                                </div>
-                                <span className="leading-tight">{offer}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+              <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 p-4 opacity-0 translate-y-2 pointer-events-none group-hover/badge:opacity-100 group-hover/badge:translate-y-0 group-hover/badge:pointer-events-auto transition-all duration-300 ease-out z-30">
+                {/* Little triangle arrow */}
+                <div className="absolute -top-1.5 right-4 w-3 h-3 bg-white border-t border-l border-gray-100 transform rotate-45"></div>
+
+                <p className="text-[10px] font-bold text-[#0b4f4a] uppercase tracking-wider mb-2 border-b border-gray-100 pb-1">Included Deals</p>
+                <ul className="space-y-2">
+                  {trip.offers.map((offer, idx) => (
+                    <li key={idx} className="text-xs text-brand-navy font-medium flex items-start gap-2">
+                      <div className="mt-0.5 bg-brand-green/20 rounded-full p-0.5">
+                        <Check size={8} className="text-brand-navy" strokeWidth={4} />
+                      </div>
+                      <span className="leading-tight">{offer}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         )}
@@ -97,22 +97,22 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onClick }) => {
 
         {/* Static Tags (Top) - Grouped by colors */}
         <div className="flex flex-wrap gap-2 mb-6">
-           {trip.tags.map((tag, idx) => (
-             <span 
-                key={idx} 
-                className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap ${getTagStyle(tag)}`}
-             >
-               {getTagIcon(tag)}
-               {tag}
-             </span>
-           ))}
+          {trip.tags.map((tag, idx) => (
+            <span
+              key={idx}
+              className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap ${getTagStyle(tag)}`}
+            >
+              {getTagIcon(tag)}
+              {tag}
+            </span>
+          ))}
         </div>
 
         {/* Description */}
         <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3">
           {trip.description}
         </p>
-        
+
         {/* Highlights */}
         <div className="space-y-2 mb-6 bg-gray-50 p-4 rounded-xl">
           {trip.highlights.map((item, idx) => (
@@ -125,27 +125,27 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onClick }) => {
 
         {/* Auto-Scrolling Hashtag Conveyor (Bottom) */}
         {trip.hashtags && (
-            <div className="w-full overflow-hidden mb-6 relative">
-                {/* Gradient masks for fade effect */}
-                <div className="absolute left-0 top-0 bottom-0 w-8 bg-linear-to-r from-white to-transparent z-10"></div>
-                <div className="absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-white to-transparent z-10"></div>
-                
-                <motion.div 
-                    className="flex gap-3 w-max"
-                    animate={{ x: ["0%", "-50%"] }}
-                    transition={{ repeat: Infinity, ease: "linear", duration: 15 }}
+          <div className="w-full overflow-hidden mb-6 relative">
+            {/* Gradient masks for fade effect */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-linear-to-r from-white to-transparent z-10"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-white to-transparent z-10"></div>
+
+            <motion.div
+              className="flex gap-3 w-max"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, ease: "linear", duration: 15 }}
+            >
+              {/* Repeat tags twice to create seamless loop */}
+              {[...trip.hashtags, ...trip.hashtags].map((tag, idx) => (
+                <span
+                  key={idx}
+                  className="text-sm font-bold text-gray-400 italic hover:text-brand-coral transition-colors"
                 >
-                    {/* Repeat tags twice to create seamless loop */}
-                    {[...trip.hashtags, ...trip.hashtags].map((tag, idx) => (
-                        <span 
-                            key={idx} 
-                            className="text-sm font-bold text-gray-400 italic hover:text-brand-coral transition-colors"
-                        >
-                        {tag}
-                        </span>
-                    ))}
-                </motion.div>
-            </div>
+                  {tag}
+                </span>
+              ))}
+            </motion.div>
+          </div>
         )}
 
         {/* Footer (Price + Button) */}
@@ -153,19 +153,19 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onClick }) => {
           <div className="flex flex-col">
             <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Starting From</span>
             <div className="flex items-baseline gap-2">
-               <span className="text-2xl font-black text-brand-navy">{trip.price}</span>
-               {trip.originalPrice && (
-                 <span className="text-sm text-gray-400 line-through font-medium">{trip.originalPrice}</span>
-               )}
+              <span className="text-2xl font-black text-brand-navy">{trip.price}</span>
+              {trip.originalPrice && (
+                <span className="text-sm text-gray-400 line-through font-medium">{trip.originalPrice}</span>
+              )}
             </div>
             <span className="text-[10px] text-gray-400 font-bold">NET / PAX</span>
           </div>
-          
+
           {/* Coral Sunset Outline Button */}
-          <button 
+          <button
             onClick={(e) => {
-                e.stopPropagation();
-                if(onClick) onClick();
+              e.stopPropagation();
+              onClick?.();
             }}
             className="px-6 py-2.5 rounded-full bg-white border-2 border-brand-coral text-brand-coral font-bold text-sm shadow-sm hover:bg-brand-coral hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
           >

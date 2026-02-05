@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { ALL_PACKAGES } from '../../components/UI/constants';
 import TripCard from '../../components/UI/TripCard';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -196,6 +197,12 @@ interface DestinationsProps {
 }
 
 const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria }) => {
+  const router = useRouter();
+  
+  const handleTripClick = () => {
+    router.push('/package-details');
+  };
+
   // --- STATE ---
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isMobileSortOpen, setIsMobileSortOpen] = useState(false);
@@ -735,7 +742,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <TripCard trip={pkg} onClick={onTripClick} />
+                            <TripCard trip={pkg} onClick={handleTripClick} />
                         </motion.div>
                     ))}
                 </AnimatePresence>
