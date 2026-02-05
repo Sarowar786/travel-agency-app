@@ -3,6 +3,7 @@ import React from 'react';
 import { CRUISES } from './constants';
 import { ArrowRight, Ship, Calendar } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 // interface FeaturedCruisesProps {
 //   onCruiseClick: (id: string) => void;
@@ -12,6 +13,10 @@ import Link from 'next/link';
 const FeaturedCruises: React.FC<any> = () => {
   // Show top 3 cruises
   const displayCruises = CRUISES.slice(0, 3);
+  const router = useRouter()
+  const onCruiseClick = (id:string)=>{
+    router.push('/cabin-booking')
+  }
 
   return (
     // Changed bg to white to blend with previous section
@@ -35,7 +40,7 @@ const FeaturedCruises: React.FC<any> = () => {
             {displayCruises.map((cruise) => (
                 <div 
                     key={cruise.id}
-                    // onClick={() => onCruiseClick(cruise.id)}
+                    onClick={() => onCruiseClick(cruise.id)}
                     className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer border border-gray-100 flex flex-col h-full"
                 >
                     <div className="h-64 overflow-hidden relative">

@@ -1,22 +1,19 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import PackageDetails from '@/components/Destinations/PackageDetails'
+import CruisePackageDetails from '@/components/Cruises/CruisePackageDetails'
 
 export default function PackageDetailsPage() {
   const router = useRouter()
 
   const handleNavigateBack = () => {
-    router.push('/destinations')
+    router.push('/cruises')
   }
 
-  const handleNavigateBooking = () => {
-    router.push('/booking')
-  }
 
   return (
-    <PackageDetails 
+    <CruisePackageDetails 
       onNavigateBack={handleNavigateBack} 
-      onNavigateBooking={handleNavigateBooking} 
+    //   onCruiseClick={handleNavigateCabinBooking} 
     />
   )
 }
