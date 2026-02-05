@@ -132,7 +132,7 @@ const Navbar = () => {
                     key={lang.code}
                     onClick={() => handleLanguageChange(lang.code)}
                     className={`w-full px-4 py-2 flex justify-between text-sm hover:bg-gray-50 ${
-                      currentLang === lang.short ? "text-[#0b4f4a]" : "text-gray-600"
+                      currentLang === lang.short ? "text-brand-teal" : "text-gray-600"
                     }`}
                   >
                     {lang.label}
@@ -172,7 +172,7 @@ const Navbar = () => {
               onClick={() => setIsOpen(false)}
               className={`block py-4 text-xl border-b ${
                 isActive(link.href)
-                  ? "text-[#0b4f4a] font-bold"
+                  ? "text-brand-teal font-bold"
                   : "text-brand-navy"
               }`}
             >
