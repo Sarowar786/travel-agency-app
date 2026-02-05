@@ -49,14 +49,14 @@ const FeaturedCruises: React.FC<any> = () => {
                         </div>
                     </div>
                     
-                    <div className="p-6 flex flex-col flex-grow">
+                    <div className="p-6 flex flex-col grow">
                         <div className="flex items-center gap-2 text-xs font-bold text-gray-400 mb-2">
                              <Calendar size={12} /> {cruise.departure} • {cruise.nights} Nights
                         </div>
                         <h3 className="text-xl font-bold text-brand-navy mb-3 group-hover:text-[#0b4f4a] transition-colors leading-tight">
                             {cruise.title}
                         </h3>
-                        <p className="text-sm text-gray-500 mb-6 flex-grow">{cruise.route}</p>
+                        <p className="text-sm text-gray-500 mb-6 grow">{cruise.route}</p>
                         
                         <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
                             <div>

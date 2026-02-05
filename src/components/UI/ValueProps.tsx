@@ -41,7 +41,7 @@ const ValueProps: React.FC = () => {
               key={idx} 
               className="group bg-white/10 backdrop-blur-md border border-white/10 p-8 rounded-3xl hover:-translate-y-2 hover:bg-white/15 transition-all duration-300 shadow-xl"
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-brand-green to-teal-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-linear-to-br from-brand-green to-teal-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <prop.icon size={32} className="text-brand-navy" strokeWidth={1.5} />
               </div>
               

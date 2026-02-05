@@ -83,7 +83,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onClick }) => {
       </div>
 
       {/* Card Body */}
-      <div className="p-6 flex flex-col flex-grow">
+      <div className="p-6 flex flex-col grow">
         {/* Location */}
         <div className="flex items-center gap-1 text-sm text-gray-500 mb-3 font-semibold">
           <MapPin size={14} className="text-[#0b4f4a]" />
@@ -127,8 +127,8 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onClick }) => {
         {trip.hashtags && (
             <div className="w-full overflow-hidden mb-6 relative">
                 {/* Gradient masks for fade effect */}
-                <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-10"></div>
-                <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-8 bg-linear-to-r from-white to-transparent z-10"></div>
+                <div className="absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-white to-transparent z-10"></div>
                 
                 <motion.div 
                     className="flex gap-3 w-max"

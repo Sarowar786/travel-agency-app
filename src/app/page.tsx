@@ -15,7 +15,7 @@ export default function HomePage() {
       <MoodCloud />
       <FeaturedTrips />
       <FeaturedCruises />
-      <div className="relative  bg-gradient-to-b from-[#0b4f4a] to-[#0A1A2F]">
+      <div className="relative  bg-linear-to-b from-[#0b4f4a] to-[#0A1A2F]">
         <WaveTransition />
         <ValueProps />
         <BlogSection />

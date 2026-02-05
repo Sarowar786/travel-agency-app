@@ -150,7 +150,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 5 }}
-                        className="absolute top-full left-0 mt-2 w-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-[60] max-h-60 overflow-y-auto custom-scrollbar"
+                        className="absolute top-full left-0 mt-2 w-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-60 max-h-60 overflow-y-auto custom-scrollbar"
                     >
                         <ul className="py-2">
                             <li key="all">
@@ -546,7 +546,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
           alt="Discover the World" 
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-brand-navy via-brand-navy/40 to-transparent"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -597,7 +597,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-white z-[60] lg:hidden shadow-2xl flex flex-col"
+              className="fixed inset-y-0 right-0 w-full sm:w-100 bg-white z-60 lg:hidden shadow-2xl flex flex-col"
             >
               <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-white">
                 <h2 className="text-lg font-bold text-brand-navy">Filters</h2>
@@ -637,7 +637,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 bg-white z-[60] lg:hidden rounded-t-3xl shadow-2xl p-6"
+              className="fixed bottom-0 left-0 right-0 bg-white z-60 lg:hidden rounded-t-3xl shadow-2xl p-6"
             >
               <div className="flex justify-between items-center mb-6">
                  <h3 className="font-bold text-xl text-brand-navy">Sort By</h3>

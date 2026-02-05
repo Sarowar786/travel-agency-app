@@ -91,7 +91,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           onClick={() => setActiveDropdown(activeDropdown === 'destination' ? null : 'destination')}
           className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'destination' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <MapPin className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
+          <MapPin className="text-[#0b4f4a] w-5 h-5 shrink-0" />
           <div className="flex flex-col w-full overflow-hidden">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Where to?</span>
             <div className="flex items-center justify-between">
@@ -105,7 +105,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
         {/* Dropdown Menu */}
         {activeDropdown === 'destination' && (
-          <div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-[100] animate-fadeIn">
+          <div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-100 animate-fadeIn">
             <ul className="py-2">
               {destinations.map((item) => (
                 <li key={item.value}>
@@ -136,7 +136,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           disabled={!destination}
           className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'city' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <Building2 className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
+          <Building2 className="text-[#0b4f4a] w-5 h-5 shrink-0" />
           <div className="flex flex-col w-full overflow-hidden">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">City</span>
              <div className="flex items-center justify-between">
@@ -153,7 +153,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
         {/* Dropdown Menu */}
         {activeDropdown === 'city' && (
-          <div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-[100] animate-fadeIn">
+          <div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-100 animate-fadeIn">
             <ul className="py-2 max-h-60 overflow-y-auto custom-scrollbar">
               {citiesByCountry[destination]?.map((cityName) => (
                 <li key={cityName}>
@@ -186,7 +186,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           onClick={() => setActiveDropdown(activeDropdown === 'checkin' ? null : 'checkin')}
           className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'checkin' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <CalendarIcon className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
+          <CalendarIcon className="text-[#0b4f4a] w-5 h-5 shrink-0" />
           <div className="flex flex-col w-full">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Check-in</span>
             <span className={`font-bold truncate text-sm md:text-base ${checkIn ? 'text-brand-navy' : 'text-gray-300'}`}>
@@ -216,7 +216,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           onClick={() => setActiveDropdown(activeDropdown === 'checkout' ? null : 'checkout')}
           className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'checkout' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <CalendarIcon className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
+          <CalendarIcon className="text-[#0b4f4a] w-5 h-5 shrink-0" />
           <div className="flex flex-col w-full">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Check-out</span>
              <span className={`font-bold truncate text-sm md:text-base ${checkOut ? 'text-brand-navy' : 'text-gray-300'}`}>
@@ -246,7 +246,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           onClick={() => setActiveDropdown(activeDropdown === 'triptype' ? null : 'triptype')}
           className={`w-full text-left px-6 py-3 rounded-full hover:bg-[#0b4f4a]/5 transition-colors flex items-center gap-3 ${activeDropdown === 'triptype' ? 'bg-[#0b4f4a]/5' : ''}`}
         >
-          <Compass className="text-[#0b4f4a] w-5 h-5 flex-shrink-0" />
+          <Compass className="text-[#0b4f4a] w-5 h-5 shrink-0" />
           <div className="flex flex-col w-full overflow-hidden">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Trip Type</span>
             <div className="flex items-center justify-between">
@@ -260,7 +260,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
         {/* Dropdown Menu */}
         {activeDropdown === 'triptype' && (
-          <div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-[100] animate-fadeIn">
+          <div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-100 animate-fadeIn">
             <ul className="py-2">
               {tripTypes.map((item) => (
                 <li key={item.value}>
@@ -368,7 +368,7 @@ const CalendarWidget: React.FC<CalendarWidgetProps> = ({ selectedDate, onSelect,
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   return (
-    <div className="absolute top-full left-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 z-[100] animate-fadeIn" onClick={(e) => e.stopPropagation()}>
+    <div className="absolute top-full left-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 z-100 animate-fadeIn" onClick={(e) => e.stopPropagation()}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-100 rounded-full text-gray-500">

@@ -194,7 +194,7 @@ const MoodCloud: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[280px] md:h-[320px] overflow-hidden bg-white mt-16 md:mt-24 mb-4 select-none pointer-events-none"
+      className="relative w-full h-70 md:h-80 overflow-hidden bg-white mt-16 md:mt-24 mb-4 select-none pointer-events-none"
     >
       {/* Floating items phase */}
       <AnimatePresence>

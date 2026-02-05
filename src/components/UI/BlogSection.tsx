@@ -54,7 +54,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ onBlogClick, onViewGuides }) 
             onClick={() => onBlogClick?.(featuredPost.id)}
             className="group cursor-pointer flex flex-col h-full bg-white/5 border border-white/10 rounded-3xl p-5 hover:bg-white/10 transition-colors duration-300 shadow-2xl"
           >
-            <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 shadow-inner">
+            <div className="relative w-full aspect-16/10 rounded-2xl overflow-hidden mb-6 shadow-inner">
               <img 
                 src={featuredPost.image} 
                 alt={featuredPost.title}
@@ -65,7 +65,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ onBlogClick, onViewGuides }) 
               <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
             </div>
             
-            <div className="flex flex-col flex-grow">
+            <div className="flex flex-col grow">
                 <div className="flex items-center gap-2 mb-4">
                      <span className="inline-flex items-center gap-1.5 bg-brand-green text-brand-navy px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
                         <Calendar size={12} /> {featuredPost.date}
@@ -76,7 +76,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ onBlogClick, onViewGuides }) 
                   {featuredPost.title}
                 </h3>
                 
-                <p className="text-gray-300 mb-8 leading-relaxed max-w-xl flex-grow">
+                <p className="text-gray-300 mb-8 leading-relaxed max-w-xl grow">
                   {featuredPost.excerpt}
                 </p>
 
@@ -100,7 +100,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ onBlogClick, onViewGuides }) 
                 className="flex flex-col md:flex-row gap-5 group cursor-pointer items-center bg-white/5 hover:bg-white/10 border border-white/10 p-4 rounded-3xl transition-all duration-300"
               >
                 {/* Thumbnail */}
-                <div className="w-full md:w-48 aspect-video md:aspect-[4/3] shrink-0 rounded-2xl overflow-hidden relative shadow-lg">
+                <div className="w-full md:w-48 aspect-video md:aspect-4/3 shrink-0 rounded-2xl overflow-hidden relative shadow-lg">
                     <img 
                         src={post.image} 
                         alt={post.title}

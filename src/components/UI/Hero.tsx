@@ -72,7 +72,7 @@ const Hero: React.FC<HeroProps> = ({ onSearch, onBannerClick }) => {
       
       {/* CAROUSEL CONTAINER - STRICT 21:9 ASPECT RATIO */}
       {/* Used aspect-[21/9] to maintain the strip look on all devices */}
-      <div className="relative w-full aspect-[21/9] overflow-hidden bg-brand-navy">
+      <div className="relative w-full aspect-21/9 overflow-hidden bg-brand-navy">
           <AnimatePresence initial={false} custom={direction} mode='popLayout'>
             <motion.div
               key={page}
@@ -110,7 +110,7 @@ const Hero: React.FC<HeroProps> = ({ onSearch, onBannerClick }) => {
               />
               
               {/* Desktop Gradient Overlay - Subtle readability boost */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-black/10 pointer-events-none"></div>
             </motion.div>
           </AnimatePresence>
 
@@ -217,7 +217,7 @@ const FlightControl: React.FC<FlightControlProps> = ({ direction, onClick }) => 
             initial={{ opacity: 0, scaleX: 0 }}
             animate={isFlying ? { opacity: [0, 0.8, 0], scaleX: [0.5, 2, 0.5], x: isLeft ? 30 : -30 } : { opacity: 0, scaleX: 0 }}
             transition={{ duration: 0.3 }}
-            className={`absolute top-1/2 w-[30px] -translate-y-1/2 w-16 h-1 bg-white/60 blur-[1px] rounded-full origin-${isLeft ? 'left' : 'right'} ${isLeft ? 'left-full' : 'right-full'}`}
+            className={`absolute top-1/2 w-16 -translate-y-1/2 h-1 bg-white/60 blur-[1px] rounded-full origin-${isLeft ? 'left' : 'right'} ${isLeft ? 'left-full' : 'right-full'}`}
         />
 
         <motion.div
