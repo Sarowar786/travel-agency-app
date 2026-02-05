@@ -23,7 +23,7 @@ const TikTokIcon = ({ size = 24, className = "" }: { size?: number, className?: 
 
 const Footer: React.FC = () => {
   return (
-    <footer id="contact" className="bg-[#0A1A2F] text-white">
+    <footer id="contact" className="bg-brand-navy text-white">
       <TrustBar />
       <Newsletter variant="navy" />
 
@@ -114,7 +114,7 @@ const Footer: React.FC = () => {
               <h4 className="font-bold text-lg mb-6">Contact</h4>
               <ul className="space-y-4 text-gray-400">
                 <li className="flex items-start gap-3">
-                  <MapPin size={20} className="text-[#0b4f4a] mt-1" />
+                  <MapPin size={20} className="text-brand-teal mt-1" />
                   <span>
                     2 Gambas Crescent, #07-24
                     <br />
@@ -122,13 +122,13 @@ const Footer: React.FC = () => {
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Phone size={20} className="text-[#0b4f4a]" />
+                  <Phone size={20} className="text-brand-teal" />
                   <a href="tel:+6567760496" className="hover:text-brand-green transition-colors">
                     +65 6776 0496
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Mail size={20} className="text-[#0b4f4a]" />
+                  <Mail size={20} className="text-brand-teal" />
                   <a
                     href="mailto:business@longvacationtravel.com"
                     className="hover:text-brand-green transition-colors"

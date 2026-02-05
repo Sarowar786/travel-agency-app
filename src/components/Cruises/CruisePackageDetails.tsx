@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
     ArrowLeft, Anchor, MapPin, Calendar, Users, Waves, Coffee, Utensils, Wifi, Sun, Moon, CheckCircle2, ChevronDown, ChevronUp, Star, Mail, Download, Ship, ArrowRight
 } from 'lucide-react';
 import { CRUISES } from '../UI/constants';
@@ -66,7 +66,7 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
                 <div className="text-4xl font-black text-brand-navy my-2">S${activeCabin.price}</div>
                 <p className="text-xs text-gray-400">per person (before port taxes)</p>
             </div>
-            
+
             <button className="w-full bg-brand-teal text-white font-bold py-4 rounded-xl shadow-lg hover:bg-brand-navy hover:scale-[1.02] transition-all mb-4">
                 Book This Cabin
             </button>
@@ -76,15 +76,15 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
 
             <div className="mt-8 space-y-4">
                 <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <Utensils size={18} className="text-brand-coral"/>
+                    <Utensils size={18} className="text-brand-coral" />
                     <span>All meals included (Buffet & Dining Room)</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <Star size={18} className="text-brand-coral"/>
+                    <Star size={18} className="text-brand-coral" />
                     <span>World-class entertainment shows</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <Wifi size={18} className="text-gray-400"/>
+                    <Wifi size={18} className="text-gray-400" />
                     <span className="text-gray-400 line-through">Wi-Fi Package (Add-on)</span>
                 </div>
             </div>
@@ -95,15 +95,15 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
         <div className="bg-white min-h-screen pb-20">
             {/* 1. HERO SECTION (Ship Focus) */}
             <div className="relative h-[60vh] bg-brand-navy">
-                <img 
-                    src="https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=2000" 
-                    alt="Genting Dream" 
+                <img
+                    src="https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=2000"
+                    alt="Genting Dream"
                     className="w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-brand-navy via-brand-navy/40 to-transparent" />
-                
+
                 <div className="absolute top-24 left-0 right-0 px-6 z-20">
-                    <button 
+                    <button
                         onClick={onNavigateBack}
                         className="flex items-center gap-2 text-white bg-black/20 hover:bg-brand-teal backdrop-blur-md px-4 py-2 rounded-full font-medium transition-colors"
                     >
@@ -118,15 +118,15 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.8 }}
                         >
-                             <div className="flex items-center gap-2 text-brand-teal font-bold uppercase tracking-widest text-sm mb-2">
+                            <div className="flex items-center gap-2 text-brand-teal font-bold uppercase tracking-widest text-sm mb-2">
                                 <Anchor size={18} /> 4 Days 3 Nights
-                             </div>
-                             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
                                 Genting Dream Getaway
-                             </h1>
-                             <p className="text-xl text-gray-200 flex items-center gap-2">
+                            </h1>
+                            <p className="text-xl text-gray-200 flex items-center gap-2">
                                 <MapPin size={20} /> Singapore • Penang • Singapore
-                             </p>
+                            </p>
                         </motion.div>
                     </div>
                 </div>
@@ -134,41 +134,40 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
 
             <div className="container mx-auto px-4 md:px-8 mt-6 relative z-30">
                 <div className="grid grid-cols-1 xl:grid-cols-12 gap-12">
-                    
+
                     {/* LEFT COLUMN */}
                     <div className="xl:col-span-8 space-y-12">
-                        
+
                         {/* CABIN SELECTION */}
                         <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                             <h2 className="text-2xl font-bold text-brand-navy mb-6 flex items-center gap-2">
+                            <h2 className="text-2xl font-bold text-brand-navy mb-6 flex items-center gap-2">
                                 <Sun size={24} className="text-brand-teal" /> Select Your Stateroom
-                             </h2>
-                             
-                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                            </h2>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                                 {CABINS.map(cabin => (
                                     <button
                                         key={cabin.id}
                                         onClick={() => setSelectedCabin(cabin.id)}
-                                        className={`rounded-2xl p-4 border-2 text-left transition-all ${
-                                            selectedCabin === cabin.id 
-                                            ? 'border-brand-teal bg-brand-teal/5 shadow-md' 
-                                            : 'border-gray-100 hover:border-gray-300'
-                                        }`}
+                                        className={`rounded-2xl p-4 border-2 text-left transition-all ${selectedCabin === cabin.id
+                                                ? 'border-brand-teal bg-brand-teal/5 shadow-md'
+                                                : 'border-gray-100 hover:border-gray-300'
+                                            }`}
                                     >
                                         <div className="font-bold text-brand-navy mb-1">{cabin.name}</div>
                                         <div className="text-brand-teal font-black text-lg">S${cabin.price}</div>
                                         <div className="text-xs text-gray-400">per pax</div>
                                     </button>
                                 ))}
-                             </div>
+                            </div>
 
-                             {/* Active Cabin Details */}
-                             <motion.div 
+                            {/* Active Cabin Details */}
+                            <motion.div
                                 key={selectedCabin}
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 className="flex flex-col md:flex-row gap-6 bg-gray-50 rounded-2xl p-6 border border-gray-100"
-                             >
+                            >
                                 <div className="w-full md:w-1/2 h-48 rounded-xl overflow-hidden shrink-0">
                                     <img src={activeCabin.image} alt={activeCabin.name} className="w-full h-full object-cover" />
                                 </div>
@@ -187,7 +186,7 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
                                         <span className="text-brand-navy font-black text-xl">S${activeCabin.price}</span>
                                     </div>
                                 </div>
-                             </motion.div>
+                            </motion.div>
                         </div>
 
                         {/* ITINERARY */}
@@ -198,7 +197,7 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
                             <div className="space-y-4">
                                 {ITINERARY.map(item => (
                                     <div key={item.day} className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
-                                        <button 
+                                        <button
                                             onClick={() => setExpandedDay(expandedDay === item.day ? null : item.day)}
                                             className="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors"
                                         >
@@ -212,7 +211,7 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
                                                     {item.arrive !== '-' && item.depart !== '-' && ' | '}
                                                     {item.depart !== '-' && `Depart: ${item.depart}`}
                                                 </div>
-                                                {expandedDay === item.day ? <ChevronUp size={20} className="text-gray-400"/> : <ChevronDown size={20} className="text-gray-400"/>}
+                                                {expandedDay === item.day ? <ChevronUp size={20} className="text-gray-400" /> : <ChevronDown size={20} className="text-gray-400" />}
                                             </div>
                                         </button>
                                         {expandedDay === item.day && (
@@ -232,7 +231,7 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
 
                     {/* RIGHT COLUMN: FIXED SIDEBAR (Col-4) */}
                     <div className="hidden xl:flex xl:col-span-4 flex-col gap-6 sticky top-24 self-start h-fit">
-                        
+
                         {/* Booking Card */}
                         <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-2xl">
                             <BookingCardContent />
@@ -248,31 +247,31 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
                     <h3 className="text-2xl font-bold text-brand-navy mb-8">Other Voyages you may like</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {relatedCruises.map((cruise) => (
-                            <div 
+                            <div
                                 key={cruise.id}
                                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                                 className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer border border-gray-100 flex flex-col h-full"
                             >
                                 <div className="h-64 overflow-hidden relative">
-                                    <img 
-                                        src={cruise.image} 
-                                        alt={cruise.title} 
-                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" 
+                                    <img
+                                        src={cruise.image}
+                                        alt={cruise.title}
+                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                                     />
                                     <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-brand-navy text-xs font-bold px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1">
                                         <Ship size={12} className="text-brand-teal" /> {cruise.ship}
                                     </div>
                                 </div>
-                                
+
                                 <div className="p-6 flex flex-col grow">
                                     <div className="flex items-center gap-2 text-xs font-bold text-gray-400 mb-2">
-                                         <Calendar size={12} /> {cruise.departure} • {cruise.nights} Nights
+                                        <Calendar size={12} /> {cruise.departure} • {cruise.nights} Nights
                                     </div>
                                     <h3 className="text-xl font-bold text-brand-navy mb-3 group-hover:text-brand-teal transition-colors leading-tight">
                                         {cruise.title}
                                     </h3>
                                     <p className="text-sm text-gray-500 mb-6 grow">{cruise.route}</p>
-                                    
+
                                     <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
                                         <div>
                                             <span className="text-[10px] font-bold text-gray-400 uppercase block">From</span>
@@ -291,7 +290,7 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
 
             {/* MOBILE BOTTOM BAR (Visible on Tablet/Mobile < xl) */}
             <div className="xl:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 pb-6 z-60 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
-                <button 
+                <button
                     onClick={() => setIsBookingDrawerOpen(true)}
                     className="w-full bg-brand-navy text-white font-bold py-3 rounded-full hover:bg-brand-teal transition-colors shadow-lg flex items-center justify-center gap-2"
                 >
@@ -303,7 +302,7 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
             <AnimatePresence>
                 {isBookingDrawerOpen && (
                     <>
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -320,7 +319,7 @@ const CruisePackageDetails: React.FC<CruisePackageDetailsProps> = ({ onNavigateB
                             <div className="w-full flex justify-center pt-3 pb-1" onClick={() => setIsBookingDrawerOpen(false)}>
                                 <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
                             </div>
-                            
+
                             <div className="p-6 flex-1 overflow-y-auto">
                                 <BookingCardContent />
                             </div>
