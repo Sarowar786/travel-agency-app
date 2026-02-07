@@ -17,6 +17,9 @@ export default function HomePage() {
   const handleTripClick = () => {
     router.push('/package-details')
   }
+  const handleNavigateBlogClick = () => {
+    router.push('/blog-details')
+  }
 
   return (
     <div className='bg-white'>
@@ -24,10 +27,10 @@ export default function HomePage() {
       <MoodCloud />
       <FeaturedTrips onTripClick={handleTripClick} />
       <FeaturedCruises />
-      <div className="relative  bg-linear-to-b from-[#0b4f4a] to-[#0A1A2F]">
+      <div className="relative  bg-linear-to-b from-brand-teal to-brand-navy">
         <WaveTransition />
         <ValueProps />
-        <BlogSection />
+        <BlogSection onBlogClick={handleNavigateBlogClick} />
       </div>
     </div>
   )

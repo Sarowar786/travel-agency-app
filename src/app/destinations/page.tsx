@@ -96,7 +96,7 @@ const FilterSection = ({ title, children, isOpenDefault = true }: FilterSectionP
         onClick={() => setIsOpen(!isOpen)} 
         className="flex items-center justify-between w-full mb-3 group"
       >
-        <h4 className="font-bold text-brand-navy group-hover:text-[#0b4f4a] transition-colors">{title}</h4>
+        <h4 className="font-bold text-brand-navy group-hover:text-brand-teal transition-colors">{title}</h4>
         {isOpen ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
       </button>
       <AnimatePresence>
@@ -138,7 +138,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
                 onClick={onToggle}
                 disabled={disabled}
                 className={`w-full text-left p-3 pr-10 rounded-xl border bg-gray-50 text-sm font-bold flex items-center justify-between transition-all ${
-                    isOpen ? 'border-[#0b4f4a] ring-1 ring-[#0b4f4a]' : 'border-gray-200 hover:border-[#0b4f4a]/50'
+                    isOpen ? 'border-brand-teal ring-1 ring-brand-teal' : 'border-gray-200 hover:border-brand-teal/50'
                 } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer text-brand-navy'}`}
             >
                 <span className="truncate">{value || placeholder}</span>
@@ -408,7 +408,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
     <div className="space-y-1" ref={sidebarRef}>
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-xl font-bold text-brand-navy">Filters</h3>
-        <button onClick={clearFilters} className="text-sm text-[#0b4f4a] font-semibold hover:underline">Reset All</button>
+        <button onClick={clearFilters} className="text-sm text-brand-teal font-semibold hover:underline">Reset All</button>
       </div>
 
       {/* 1. REGION */}
@@ -469,7 +469,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
         <div className="space-y-2">
           {DURATION_RANGES.map((range) => (
             <label key={range.label} className="flex items-center gap-3 cursor-pointer group">
-              <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${selectedDurations.includes(range.label) ? 'bg-[#0b4f4a] border-[#0b4f4a]' : 'border-gray-300 bg-white group-hover:border-[#0b4f4a]'}`}>
+              <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${selectedDurations.includes(range.label) ? 'bg-brand-teal border-brand-teal' : 'border-gray-300 bg-white group-hover:border-brand-teal'}`}>
                  {selectedDurations.includes(range.label) && <Check size={12} className="text-white" />}
               </div>
               <input 
@@ -495,7 +495,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
         <div className="grid grid-cols-2 gap-2">
            {TRAVEL_STYLES.map((style) => (
              <label key={style} className="flex items-center gap-2 cursor-pointer group">
-                <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${selectedStyles.includes(style) ? 'bg-[#0b4f4a] border-[#0b4f4a]' : 'border-gray-300 bg-white group-hover:border-[#0b4f4a]'}`}>
+                <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${selectedStyles.includes(style) ? 'bg-brand-teal border-brand-teal' : 'border-gray-300 bg-white group-hover:border-brand-teal'}`}>
                    {selectedStyles.includes(style) && <Check size={10} className="text-white" />}
                 </div>
                 <input 
@@ -526,7 +526,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
               onChange={(e) => setLocalPriceRange({ ...localPriceRange, min: e.target.value })}
               onBlur={applyPriceFilter}
               onKeyDown={handlePriceKeyDown}
-              className="w-full p-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm font-bold text-brand-navy focus:outline-none focus:border-[#0b4f4a] focus:ring-1 focus:ring-[#0b4f4a] placeholder:text-gray-400 placeholder:font-normal"
+              className="w-full p-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm font-bold text-brand-navy focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal placeholder:text-gray-400 placeholder:font-normal"
             />
             <span className="text-gray-400 font-bold">-</span>
             <input 
@@ -536,7 +536,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
               onChange={(e) => setLocalPriceRange({ ...localPriceRange, max: e.target.value })}
               onBlur={applyPriceFilter}
               onKeyDown={handlePriceKeyDown}
-              className="w-full p-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm font-bold text-brand-navy focus:outline-none focus:border-[#0b4f4a] focus:ring-1 focus:ring-[#0b4f4a] placeholder:text-gray-400 placeholder:font-normal"
+              className="w-full p-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm font-bold text-brand-navy focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal placeholder:text-gray-400 placeholder:font-normal"
             />
          </div>
       </FilterSection>
@@ -657,10 +657,10 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
                      <button 
                         key={opt.value}
                         onClick={() => { setSortBy(opt.value); setIsMobileSortOpen(false); }}
-                        className={`w-full text-left p-4 rounded-xl font-medium flex justify-between items-center transition-colors ${sortBy === opt.value ? 'bg-[#0b4f4a]/10 text-[#0b4f4a]' : 'text-brand-navy hover:bg-gray-50'}`}
+                        className={`w-full text-left p-4 rounded-xl font-medium flex justify-between items-center transition-colors ${sortBy === opt.value ? 'bg-brand-teal/10 text-brand-teal' : 'text-brand-navy hover:bg-gray-50'}`}
                      >
                         {opt.label}
-                        {sortBy === opt.value && <Check size={18} className="text-[#0b4f4a]"/>}
+                        {sortBy === opt.value && <Check size={18} className="text-brand-teal"/>}
                      </button>
                   ))}
               </div>
@@ -694,10 +694,10 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
               <div className="hidden lg:block relative">
                  <button 
                   onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-bold text-brand-navy hover:border-[#0b4f4a] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-bold text-brand-navy hover:border-brand-teal transition-all"
                  >
                    <ArrowUpDown size={14} />
-                   Sort: <span className="text-[#0b4f4a]">{SORT_OPTIONS.find(o => o.value === sortBy)?.label}</span>
+                   Sort: <span className="text-brand-teal">{SORT_OPTIONS.find(o => o.value === sortBy)?.label}</span>
                  </button>
                  
                  {isSortOpen && (
@@ -708,7 +708,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
                         <button
                           key={opt.value}
                           onClick={() => { setSortBy(opt.value); setIsSortOpen(false); }}
-                          className={`w-full text-left px-4 py-2 text-sm font-medium hover:bg-gray-50 ${sortBy === opt.value ? 'text-[#0b4f4a] bg-[#0b4f4a]/5' : 'text-gray-600'}`}
+                          className={`w-full text-left px-4 py-2 text-sm font-medium hover:bg-gray-50 ${sortBy === opt.value ? 'text-brand-teal bg-brand-teal/5' : 'text-gray-600'}`}
                         >
                           {opt.label}
                         </button>
@@ -725,7 +725,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
                     <p className="text-xl text-gray-500 font-medium mb-4">No packages found matching your criteria.</p>
                     <button 
                         onClick={clearFilters}
-                        className="text-[#0b4f4a] font-bold hover:underline px-6 py-2 rounded-full hover:bg-[#0b4f4a]/5 transition-colors"
+                        className="text-brand-teal font-bold hover:underline px-6 py-2 rounded-full hover:bg-brand-teal/5 transition-colors"
                     >
                         Clear All Filters
                     </button>
@@ -761,13 +761,13 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
                             className={`group flex items-center gap-3 px-8 py-3 rounded-full border-2 font-bold transition-all duration-300 text-lg ${
                                 currentPage === 1 
                                 ? 'border-gray-200 bg-white text-gray-300 cursor-not-allowed'
-                                : 'border-[#0b4f4a] bg-white text-[#0b4f4a] hover:bg-[#0b4f4a] hover:text-white'
+                                : 'border-brand-teal bg-white text-brand-teal hover:bg-brand-teal hover:text-white'
                             }`}
                             whileHover={currentPage !== 1 ? { scale: 1.05 } : {}}
                             whileTap={currentPage !== 1 ? { scale: 0.95 } : {}}
                         >
                             <SleekPlane className={`w-6 h-6 transform -rotate-90 transition-colors duration-300 ${
-                              currentPage === 1 ? 'text-gray-300' : 'text-[#0b4f4a] group-hover:text-white'
+                              currentPage === 1 ? 'text-gray-300' : 'text-brand-teal group-hover:text-white'
                             }`} />
                             <span>Previous</span>
                         </motion.button>
@@ -798,8 +798,8 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
                                                 onClick={() => handlePageChange(pageNum)}
                                                 className={`w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold border-2 transition-all duration-300 relative z-10 ${
                                                     isActive 
-                                                    ? 'bg-[#0b4f4a] text-white border-[#0b4f4a] shadow-xl shadow-[#0b4f4a]/30 scale-110' 
-                                                    : 'bg-white text-brand-navy border-[#0b4f4a]/30 hover:border-brand-coral hover:text-brand-coral'
+                                                    ? 'bg-brand-teal text-white border-brand-teal shadow-xl shadow-brand-teal/30 scale-110' 
+                                                    : 'bg-white text-brand-navy border-brand-teal/30 hover:border-brand-coral hover:text-brand-coral'
                                                 }`}
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.95 }}
@@ -818,14 +818,14 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
                             className={`group flex items-center gap-3 px-8 py-3 rounded-full border-2 font-bold transition-all duration-300 text-lg ${
                                 currentPage === totalPages 
                                 ? 'border-gray-200 bg-white text-gray-300 cursor-not-allowed'
-                                : 'border-[#0b4f4a] bg-white text-[#0b4f4a] hover:bg-[#0b4f4a] hover:text-white'
+                                : 'border-brand-teal bg-white text-brand-teal hover:bg-brand-teal hover:text-white'
                             }`}
                             whileHover={currentPage !== totalPages ? { scale: 1.05 } : {}}
                             whileTap={currentPage !== totalPages ? { scale: 0.95 } : {}}
                         >
                             <span>Next</span>
                             <SleekPlane className={`w-6 h-6 transform rotate-90 transition-colors duration-300 ${
-                              currentPage === totalPages ? 'text-gray-300' : 'text-[#0b4f4a] group-hover:text-white'
+                              currentPage === totalPages ? 'text-gray-300' : 'text-brand-teal group-hover:text-white'
                             }`} />
                         </motion.button>
                     </div>
@@ -836,7 +836,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
                            onClick={() => handlePageChange(currentPage - 1)}
                            disabled={currentPage === 1}
                            className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-colors ${
-                             currentPage === 1 ? 'border-gray-100 text-gray-300 bg-white' : 'border-[#0b4f4a] text-[#0b4f4a] hover:bg-[#0b4f4a] hover:text-white'
+                             currentPage === 1 ? 'border-gray-100 text-gray-300 bg-white' : 'border-brand-teal text-brand-teal hover:bg-brand-teal hover:text-white'
                            }`}
                         >
                            <SleekPlane className="w-6 h-6 transform -rotate-90" />
@@ -851,7 +851,7 @@ const Destinations: React.FC<DestinationsProps> = ({ onTripClick, searchCriteria
                            onClick={() => handlePageChange(currentPage + 1)}
                            disabled={currentPage === totalPages}
                            className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-colors ${
-                             currentPage === totalPages ? 'border-gray-100 text-gray-300 bg-white' : 'border-[#0b4f4a] text-[#0b4f4a] hover:bg-[#0b4f4a] hover:text-white'
+                             currentPage === totalPages ? 'border-gray-100 text-gray-300 bg-white' : 'border-brand-teal text-brand-teal hover:bg-brand-teal hover:text-white'
                            }`}
                         >
                            <SleekPlane className="w-6 h-6 transform rotate-90" />
