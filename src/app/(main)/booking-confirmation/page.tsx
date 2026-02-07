@@ -1,8 +1,8 @@
 
-// import BookingConfirmation from './../../../components/Booking/BookingConfirmation';
+import BookingConfirmation from './../../../components/Booking/BookingConfirmation';
 
-// export default function BookingConfirmationPage() {
-//   return (
-//     <BookingConfirmation/>
-//   )
-// }
+export default function BookingConfirmationPage() {
+  return (
+    <BookingConfirmation/>
+  )
+}
