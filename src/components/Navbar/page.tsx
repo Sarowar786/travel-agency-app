@@ -58,7 +58,7 @@ const Navbar = () => {
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Destinations", href: "/destinations" },
-    { label: "Cruises", href: "/cruises" },
+    // { label: "Cruises", href: "/cruises" },
     { label: "Blog", href: "/blogs" },
     { label: "About Us", href: "/about" },
     { label: "Contact Us", href: "/contact" },

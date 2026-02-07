@@ -26,7 +26,7 @@ export default function HomePage() {
       <Hero />
       <MoodCloud />
       <FeaturedTrips onTripClick={handleTripClick} />
-      <FeaturedCruises />
+      {/* <FeaturedCruises /> */}
       <div className="relative  bg-linear-to-b from-brand-teal to-brand-navy">
         <WaveTransition />
         <ValueProps />
