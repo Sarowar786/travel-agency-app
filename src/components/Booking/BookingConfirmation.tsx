@@ -78,8 +78,23 @@ const formSchema = z.object({
     mobile: z.string().regex(phoneRegex, "Invalid mobile number"),
     address: z.string().min(5, "Address is required"),
   }),
+
   travellers: z.array(travellerSchema).length(2, "Exactly 2 travellers are required"),
+
+  // Optional fields
+  discountCode: z.string().optional(),
+  referredSalesStaffName: z.string().optional(),
+
+  // ✅ Checkbox validation (fixed)
+  termsAccepted: z
+    .boolean()
+    .refine(val => val === true, { message: "You must accept the terms and conditions" }),
+
+  privacyAccepted: z
+    .boolean()
+    .refine(val => val === true, { message: "You must accept the privacy policy" }),
 });
+
 
 type FormValues = z.infer<typeof formSchema>;
 
