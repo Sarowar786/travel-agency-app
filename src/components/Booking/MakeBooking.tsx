@@ -1,6 +1,7 @@
 import { div } from "framer-motion/client";
 import React from "react";
 import { motion } from 'framer-motion';
+import Link from "next/link";
 
 type SummaryRowProps = {
   label: string;
@@ -88,7 +89,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
         {/* Left Section */}
         <div className="col-span-12 lg:col-span-8 space-y-6">
           {/* Tour Details */}
-          <div className="border rounded-xl">
+          <div className="border border-brand-sand rounded-xl">
             <div className="bg-teal-800 text-white px-4 py-2 font-semibold rounded-t-xl">
               TOUR DETAILS
             </div>
@@ -124,7 +125,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
           </div>
 
           {/* Number of Rooms */}
-          <div className="border rounded-xl">
+          <div className="border border-brand-sand rounded-xl">
             <div className="bg-teal-800 text-white px-4 py-2 font-semibold rounded-t-xl">
               NUMBER OF ROOMS
             </div>
@@ -155,7 +156,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
           </div>
 
           {/* Room 1 */}
-          <div className="border rounded-xl">
+          <div className="border border-brand-sand rounded-xl">
             <div className="bg-teal-800 text-white px-4 py-2 font-semibold rounded-t-xl">
               ROOM 1
             </div>
@@ -163,7 +164,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
             <div className="px-4 pt-4 pb-6 grid grid-cols-1 md:grid-cols-5 gap-4 font-semibold">
               <div>
                 <label className="text-sm text-gray-900">Adult</label>
-                <select className="w-full border rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
+                <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
                   <option>0</option>
                   <option>1</option>
                   <option>2</option>
@@ -172,7 +173,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
 
               <div>
                 <label className="text-sm text-gray-900">Child w/ Bed</label>
-                <select className="w-full border rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
+                <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
                   <option>0</option>
                   <option>1</option>
                 </select>
@@ -180,7 +181,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
 
               <div>
                 <label className="text-sm text-gray-900">Child w/o Bed</label>
-                <select className="w-full border rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
+                <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
                   <option>0</option>
                   <option>1</option>
                 </select>
@@ -188,7 +189,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
 
               <div>
                 <label className="text-sm text-gray-900">Infants</label>
-                <select className="w-full border rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
+                <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
                   <option>0</option>
                   <option>1</option>
                 </select>
@@ -196,7 +197,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
 
               <div>
                 <label className="text-sm text-gray-900">Room Type</label>
-                <select className="w-full border rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
+                <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
                   <option>Twin Bed</option>
                   <option>Double Bed</option>
                 </select>
@@ -207,7 +208,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
 
         {/* Right Summary */}
         <div className="col-span-12 lg:col-span-4">
-          <div className="border rounded-xl">
+          <div className="border border-brand-sand rounded-xl">
             <div className="bg-teal-800 text-white px-4 py-2 font-semibold rounded-t-xl">
               BOOKING SUMMARY
             </div>
@@ -220,7 +221,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
                 total="$4,236"
               />
 
-              <div className="border-t my-2" />
+              <div className="border-t border-brand-sand my-2" />
 
               <SummaryRow
                 label="Taxes"
@@ -229,7 +230,7 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
                 total="$200"
               />
 
-              <div className="border-t my-2" />
+              <div className="border-t border-brand-sand my-2" />
 
               <SummaryRow
                 label="CRKHOLDING 13"
@@ -239,16 +240,16 @@ const MakeBooking: React.FC<MakeBookingProps> = ({ onNavigateMakeBooking }) => {
                 negative
               />
 
-              <div className="border-t my-2" />
+              <div className="border-t border-brand-sand my-2" />
 
               <div className="flex justify-between font-semibold">
                 <span className="text-black font-bold">Total SGD</span>
                 <span className="text-teal-700">$3,495</span>
               </div>
 
-              <button className="w-full mt-4 bg-red-400 hover:bg-red-500 text-white py-2 rounded">
-                NEXT
-              </button>
+              <Link href={'/booking-confirmation'} >
+                <button className="w-full mt-4 bg-red-400 hover:bg-red-500 text-white py-2 rounded duration-300 font-bold tracking-wide">NEXT</button>
+              </Link>
             </div>
           </div>
         </div>

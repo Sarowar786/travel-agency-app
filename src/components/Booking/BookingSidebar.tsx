@@ -36,8 +36,8 @@ const BookingSidebar = ({ onNavigateMakeBooking }: BookingSidebarProps) => {
   return (
     <aside className="w-full space-y-6 sticky top-6">
       {/* PRICE CARD */}
-      <div className="border rounded-xl overflow-hidden bg-white shadow-lg">
-        <div className="bg-[#8CC72B] text-black p-4">
+      <div className="border border-brand-sand rounded-xl overflow-hidden bg-white shadow-lg">
+        <div className="bg-brand-green text-black p-4">
           <p className="text-xs tracking-wide uppercase">Closing</p>
           <p className="text-3xl font-bold">$1,548</p>
         </div>
@@ -51,13 +51,13 @@ const BookingSidebar = ({ onNavigateMakeBooking }: BookingSidebarProps) => {
           </p>
 
           <button 
-            className="w-full bg-black/95  hover:bg-black/80 text-[#8CC72B] font-bold text-[16px] tracking-wide py-3 rounded-md duration-300 transition"
+            className="w-full py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-2 transition-all duration-300 bg-brand-green text-brand-navy hover:bg-[#8cc72b] hover:scale-[1.02]"
             onClick={onNavigateMakeBooking}
           >
             MAKE BOOKING
           </button>
 
-          <button className="w-full bg-[#8CC72B] hover:bg-lime-500 text-black font-bold text-[16px]  py-3 rounded-md duration-300 transition">
+          <button className="w-full py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-2 transition-all duration-300 bg-brand-navy text-brand-green hover:bg-brand-navy/90 hover:text-white hover:scale-[1.02]">
             ⬇ ITINERARY DOWNLOAD
           </button>
 
@@ -76,7 +76,7 @@ const BookingSidebar = ({ onNavigateMakeBooking }: BookingSidebarProps) => {
         {tours.map((tour) => (
           <div
             key={tour.id}
-            className="bg-white border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
+            className="bg-white border border-brand-sand rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
           >
             <div className="relative">
               {tour.isNew && (

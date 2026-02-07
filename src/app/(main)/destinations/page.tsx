@@ -1,11 +1,11 @@
 'use client'
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { ALL_PACKAGES } from '../../components/UI/constants';
-import TripCard from '../../components/UI/TripCard';
+import { ALL_PACKAGES } from '../../../components/UI/constants';
+import TripCard from '../../../components/UI/TripCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, X, ChevronDown, ChevronUp, ArrowUpDown, Check } from 'lucide-react';
-import { SearchCriteria } from '../../../types';
+import { SearchCriteria } from '../../../../types';
 
 // --- ICONS ---
 const SleekPlane = ({ className }: { className?: string }) => (

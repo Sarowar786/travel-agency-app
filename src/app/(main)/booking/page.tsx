@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import Booking from '@/components/Bookig/Booking'
+import Booking from '@/components/Booking/Booking'
 
 export default function BookingPage() {
   const router = useRouter()

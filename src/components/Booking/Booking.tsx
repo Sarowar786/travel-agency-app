@@ -62,7 +62,7 @@ const FilterSection = ({ title, children, isOpenDefault = true }: FilterSectionP
   const [isAnimating, setIsAnimating] = useState(false);
 
   return (
-    <div className="border-b border-gray-100 py-5">
+    <div className="border-b  border-gray-100 py-5">
       <button 
         onClick={() => setIsOpen(!isOpen)} 
         className="flex items-center justify-between w-full mb-3 group"
@@ -257,7 +257,7 @@ const [activeId, setActiveId] = useState<number>(tours[0].id)
                 <motion.div
                     key={tour.id}
                     layout
-                    className="bg-white rounded-lg border shadow-sm"
+                    className="bg-white rounded-lg border border-brand-sand  shadow-sm"
                 >
                     {/* Header */}
                     <div
@@ -266,7 +266,7 @@ const [activeId, setActiveId] = useState<number>(tours[0].id)
                     >
                     <div className="flex items-center gap-4 justify-center">
                         <p className="text-sm text-gray-500">{tour.date}</p>
-                        <span className="inline-block text-xs font-semibold bg-brand-green text-black px-2 py-0.5 rounded">
+                        <span className="inline-block text-sm font-semibold bg-brand-green text-black px-2 py-1 rounded">
                         {tour.airline}
                         </span>
                         <div className="flex gap-1 items-center">
@@ -278,7 +278,7 @@ const [activeId, setActiveId] = useState<number>(tours[0].id)
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <button className="duration-300 bg-[#0B4F4A]  text-white hover:scale-[1.02] text-sm px-4 py-2 rounded-lg transition-all ">
+                        <button className="duration-300 bg-[#0B4F4A]  text-white hover:scale-[1.02] text-md font-semibold px-4 py-2 rounded-lg transition-all ">
                         BOOK ONLINE
                         </button>
                     </div>
@@ -293,10 +293,10 @@ const [activeId, setActiveId] = useState<number>(tours[0].id)
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.25, ease: "easeOut" }}
-                    className="overflow-hidden border-t bg-white"
+                    className="overflow-hidden border-t border-brand-sand bg-white"
                     >
                     {/* FLIGHT INFO */}
-                    <div className="mx-10 my-6 bg-gray-50 border rounded-xl p-6">
+                    <div className="mx-10 my-6 bg-gray-50 border border-brand-sand rounded-xl p-6">
                     {/* Header */}
                     <div className="grid grid-cols-4 text-xs text-gray-500 mb-4">
                         <p>DATE</p>
@@ -344,7 +344,7 @@ const [activeId, setActiveId] = useState<number>(tours[0].id)
                     </div>
 
                     {/* ADULT FARE */}
-                    <div className="mx-10 mb-6 bg-gray-50 border rounded-xl p-6">
+                    <div className="mx-10 mb-6 bg-gray-50 border border-brand-sand rounded-xl p-6">
                     <p className="text-sm font-semibold text-teal-800 mb-4">
                         ADULT FARE
                     </p>
@@ -356,7 +356,7 @@ const [activeId, setActiveId] = useState<number>(tours[0].id)
                         <FareItem label="TAX" value="$100" />
                     </div>
 
-                    <hr className="my-6" />
+                    <hr className="my-6 text-gray-300 " />
 
                     <p className="text-sm font-semibold text-teal-800 mb-4">
                         ADULT FARE

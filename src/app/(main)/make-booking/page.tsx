@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import MakeBooking from '@/components/Bookig/MakeBooking'
+import MakeBooking from '@/components/Booking/MakeBooking'
 
 export default function MakeBookingPage() {
   const router = useRouter()
