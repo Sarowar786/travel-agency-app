@@ -1,199 +1,147 @@
-'use client'
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import  Link  from "next/link"
-import Image from "next/image"
-import logo from "../../../../public/images/logonav.png"
+"use client";
 
-// ---------------- schemas ----------------
-const signInSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-})
+import Link from "next/link";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import leftimage from '../../../../public/images/company-logo.png'
+import logo from '../../../../public/images/logonav.png'
 
-const signUpSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-})
+// ✅ 1) Zod schema: rules এখানে define হবে
+const loginSchema = z.object({
+  email: z.string().trim().nonempty( "Email is required").email("Invalid email address"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .max(6, "Password must be at least 6 characters"),
+});
 
-// ---------------- component ----------------
-export default function SigninPage() {
-  const [tab, setTab] = useState<"signin" | "signup">("signin")
 
-  const signInForm = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
-  })
+type LoginFormValues = z.infer<typeof loginSchema>;
 
-  const signUpForm = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
-  })
+export default function LoginPage() {
+  // ✅ 3) useForm সেটআপ + zodResolver
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    mode: "onTouched", // UX better: touch করলে error দেখায়
+  });
 
-  const onSignIn = (data: z.infer<typeof signInSchema>) => {
-    // API will call here for signin
-    console.log("Sign In:", data)
-  }
-  
-  const onSignUp = (data: z.infer<typeof signUpSchema>) => {
-    // API will call here for signin
-    console.log("Sign Up:", data)
-  }
+  // ✅ 4) Submit handler: valid হলে এখানে আসবে
+  const onSubmit = async (data: LoginFormValues) => {
+    // এখানে তোমার API call হবে
+    console.log("LOGIN DATA:", data);
+
+    // demo delay
+    await new Promise((r) => setTimeout(r, 800));
+    alert("Logged in (demo)");
+  };
 
   return (
-    <div>
-      <div className="container mx-auto px-4 md:px-8 h-14 flex items-center">
-
-      <Link href="/" className="flex items-center">
-          {/* <img src={logo} alt="Long Vacation Logo" /> */}
-          <Image src={logo} alt="long vacation logo" width={150} height={50} />
-        </Link>
+    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
+      {/* Left: Image */}
+      <div className="relative hidden lg:block border-r border-r-amber-50">
+        <Image
+          src={leftimage} // ✅ তুমি public/images এ image রাখো
+          alt="Campus"
+          fill
+          className="object-content"
+          priority
+        />
+        {/* optional overlay blur / tint */}
+        <div className="absolute inset-0 bg-black/10" />
       </div>
-      <div className="flex h-screen items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 px-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
-        
-        {/* Tabs */}
-        <div className="mb-6 grid grid-cols-2 rounded-lg bg-slate-100 p-1">
-          <button
-            onClick={() => setTab("signin")}
-            className={`rounded-md py-2 text-sm font-medium transition
-              ${tab === "signin" ? "bg-white shadow" : "text-slate-600"}`}
+
+      {/* Right: Form */}
+      <div className="flex items-center justify-center px-6 py-12 bg-gray-50">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="flex flex-col items-center">
+            <div className="w-60 flex items-center justify-center">
+              <Image src={logo} alt="logo"/>
+            </div>
+            <h1 className="mt-4 text-2xl font-semibold text-gray-900">
+              Hey! Welcome back
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">Sign in to your account</p>
+          </div>
+
+          {/* Form */}
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="mt-8 space-y-4"
+            noValidate
           >
-            Sign In
-          </button>
-          <button
-            onClick={() => setTab("signup")}
-            className={`rounded-md py-2 text-sm font-medium transition
-              ${tab === "signup" ? "bg-white shadow" : "text-slate-600"}`}
-          >
-            Sign Up
-          </button>
+            {/* Email */}
+            <div>
+              <label className="text-sm text-gray-700">Email</label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className={`mt-1 w-full rounded-lg border px-4 py-3 text-sm outline-none transition
+                  ${errors.email ? "border-red-500" : "border-gray-200 focus:border-orange-500"}
+                `}
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
+              )}
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="text-sm text-gray-700">Password</label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                className={`mt-1 w-full rounded-lg border px-4 py-3 text-sm outline-none transition
+                  ${errors.password ? "border-red-500" : "border-gray-200 focus:border-orange-500"}
+                `}
+                {...register("password")}
+              />
+              {errors.password && (
+                <p className="mt-1 text-xs text-red-600">
+                  {errors.password.message}
+                </p>
+              )}
+
+              <div className="mt-2 flex justify-end">
+                <Link
+                  href="/forget-password"
+                  className="text-xs text-blue-600 hover:underline"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
+            </div>
+
+            {/* Login button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full rounded-lg bg-orange-500 hover:bg-orange-600 transition text-white font-semibold py-3 disabled:opacity-60"
+            >
+              {isSubmitting ? "Logging in..." : "Log In"}
+            </button>
+
+            {/* Footer */}
+            <p className="text-center text-sm text-gray-500 mt-6">
+              Don&apos;t have an account?{" "}
+              <Link href="/register" className="text-orange-500 font-semibold hover:underline">
+                Register
+              </Link>
+            </p>
+          </form>
         </div>
-
-        {/* ---------- Sign In ---------- */}
-        {tab === "signin" && (
-          <form
-            onSubmit={signInForm.handleSubmit(onSignIn)}
-            className="space-y-5"
-          >
-            <div>
-              <label className="block text-sm font-medium">Email</label>
-              <input
-                type="email"
-                {...signInForm.register("email")}
-                className="mt-1 w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
-              />
-              {signInForm.formState.errors.email && (
-                <p className="mt-1 text-xs text-red-500">
-                  {signInForm.formState.errors.email.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Password</label>
-              <input
-                type="password"
-                {...signInForm.register("password")}
-                className="mt-1 w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
-              />
-              {signInForm.formState.errors.password && (
-                <p className="mt-1 text-xs text-red-500">
-                  {signInForm.formState.errors.password.message}
-                </p>
-              )}
-            </div>
-            <Link href="/forget-password">
-              <p className="text-brand-teal mb-2">Forget password?</p>
-            </Link>
-
-            <button
-              type="submit"
-              className="w-full rounded-md bg-slate-900 py-2 text-white hover:bg-slate-800"
-            >
-              Sign In
-            </button>
-          </form>
-        )}
-
-        {/* ---------- Sign Up ---------- */}
-        {tab === "signup" && (
-          <form
-            onSubmit={signUpForm.handleSubmit(onSignUp)}
-            className="space-y-5"
-          >
-            <div>
-              <label className="block text-sm font-medium">Name</label>
-              <input
-                {...signUpForm.register("name")}
-                className="mt-1 w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
-              />
-              {signUpForm.formState.errors.name && (
-                <p className="mt-1 text-xs text-red-500">
-                  {signUpForm.formState.errors.name.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Email</label>
-              <input
-                type="email"
-                {...signUpForm.register("email")}
-                className="mt-1 w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
-              />
-              {signUpForm.formState.errors.email && (
-                <p className="mt-1 text-xs text-red-500">
-                  {signUpForm.formState.errors.email.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Password</label>
-              <input
-                type="password"
-                {...signUpForm.register("password")}
-                className="mt-1 w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
-              />
-              {signUpForm.formState.errors.password && (
-                <p className="mt-1 text-xs text-red-500">
-                  {signUpForm.formState.errors.password.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                {...signUpForm.register("confirmPassword")}
-                className="mt-1 w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
-              />
-              {signUpForm.formState.errors.confirmPassword && (
-                <p className="mt-1 text-xs text-red-500">
-                  {signUpForm.formState.errors.confirmPassword.message}
-                </p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              className="w-full rounded-md bg-slate-900 py-2 text-white hover:bg-slate-800"
-            >
-              Sign Up
-            </button>
-          </form>
-        )}
       </div>
     </div>
-    </div>
-  )
+  );
 }
