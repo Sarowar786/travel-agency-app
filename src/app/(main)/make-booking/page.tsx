@@ -5,11 +5,11 @@ import MakeBooking from '@/components/Booking/MakeBooking'
 export default function MakeBookingPage() {
   const router = useRouter()
 
-  const handleNavigateMakeBooking = () => {
-    router.push('/package-details')
-  }
+  // const handleNavigateMakeBooking = () => {
+  //   router.push('/package-details')
+  // }
 
   return (
-    <MakeBooking onNavigateMakeBooking={handleNavigateMakeBooking} />
+    <MakeBooking  />
   )
 }

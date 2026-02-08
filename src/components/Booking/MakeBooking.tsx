@@ -88,35 +88,35 @@ const steps = [
 
 const StepHeader = ({ currentStep }: { currentStep: StepKey }) => {
   return (
-    <div className="max-w-3xl mx-auto mb-8 rounded-xl bg-gray-200 px-6 py-3">
+    <div className="max-w-3xl mx-auto mb-8 rounded-xl bg-gray-200 px-18 pt-3 pb-8">
       <div className="flex items-center">
         {steps.map((s, idx) => {
-          const isDone = s.key < currentStep;
+          const isDone = s.key <= currentStep;
           const isActive = s.key === currentStep;
 
           const circleClass = isDone || isActive ? "bg-orange-500" : "bg-gray-400";
           const labelClass = isActive ? "text-orange-500" : "text-gray-500";
 
           // connector: left step done হলে orange, না হলে gray
-          const connectorClass = s.key < currentStep ? "bg-orange-500" : "bg-gray-400";
+          const connectorClass = s.key <= currentStep ? "bg-[#0D8B9E]" : "bg-gray-400";
 
           return (
             <React.Fragment key={s.key}>
               {/* Step Circle + Label */}
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 relative">
                 <span
-                  className={`w-8 h-8 rounded-full ${circleClass} text-white flex items-center justify-center text-sm font-bold shrink-0`}
+                  className={`w-8 h-8 rounded-full  ${circleClass} text-white flex items-center justify-center text-sm font-bold shrink-0`}
                 >
                   {isDone ? "✓" : idx + 1}
                 </span>
-                <span className={`text-xs font-medium ${labelClass}`}>
+                <span className={`text-xs font-medium absolute top-9 w-40 flex items-center justify-center ${labelClass}`}>
                   {s.label}
                 </span>
               </div>
 
               {/* Connector should touch circles (no padding, flex-1 fills space) */}
               {idx !== steps.length - 1 && (
-                <div className="flex-1 -mt-6">
+                <div className="flex-1">
                   <div className={`h-0.75 w-full ${connectorClass}`} />
                 </div>
               )}
