@@ -35,7 +35,55 @@ export default function RootLayout({
       >
         {/* <Navbar /> */}
         {children}
-        <Toaster/>
+        <Toaster
+          position="bottom-right"
+          gutter={12}
+          toastOptions={{
+            duration: 3000,
+
+            style: {
+              background: "rgba(10, 26, 47, 0.75)",
+              backdropFilter: "blur(10px)",
+              color: "#fff",
+              borderRadius: "14px",
+              border: "1px solid rgba(255,255,255,0.12)",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+              padding: "12px 14px",
+              fontSize: "14px",
+              fontWeight: 600,
+            },
+
+
+            // Default icon colors (for loading, normal)
+            iconTheme: {
+              primary: "#A3E635", // brand-green
+              secondary: "#0A1A2F",
+            },
+
+            success: {
+              style: {
+                background: "rgba(11, 79, 74, 0.95)", // brand-teal-ish
+                border: "1px solid rgba(163, 230, 53, 0.25)",
+              },
+              iconTheme: { primary: "#A3E635", secondary: "#0b4f4a" },
+            },
+
+            error: {
+              style: {
+                background: "rgba(255, 121, 108, 0.95)", // brand-coral
+                border: "1px solid rgba(255,255,255,0.25)",
+              },
+              iconTheme: { primary: "#FFFFFF", secondary: "#FF796C" },
+            },
+
+            loading: {
+              style: {
+                background: "#0A1A2F",
+                border: "1px solid rgba(255,255,255,0.12)",
+              },
+            },
+          }}
+        />
         {/* <Footer/> */}
         {/* Hidden Google Translate Element */}
         <div id="google_translate_element"></div>

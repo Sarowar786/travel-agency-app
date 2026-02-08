@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import leftimage from '../../../../public/images/company-logo.png'
@@ -18,25 +18,22 @@ const loginSchema = z.object({
 });
 
 
-type LoginFormValues = z.infer<typeof loginSchema>;
-
 export default function LoginPage() {
   // ✅ 3) useForm সেটআপ + zodResolver
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
+  } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
-    mode: "onTouched", // UX better: touch করলে error দেখায়
   });
 
   // ✅ 4) Submit handler: valid হলে এখানে আসবে
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: FieldValues) => {
     // এখানে তোমার API call হবে
     console.log("LOGIN DATA:", data);
 

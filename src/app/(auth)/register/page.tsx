@@ -6,26 +6,28 @@ import Image from "next/image";
 import logo from '../../../../public/images/logonav.png'
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { log } from "console";
+import { p } from "framer-motion/client";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const registerSchema = z.object({
   name: z.string().nonempty("Name is required"),
-  email: z.string().min(1, "Email is required").email("Invalid email address"),
+  email: z.string().trim().nonempty("Email is required").email("Invalid email address"),
   password: z
     .string()
     .min(1, "Password is required")
-    .min(6, "Password must be at least 6 characters"),
+    .max(10, "Password must be at least 10 characters"),
   confirmPassword:z
     .string()
     .min(1, "Password is required")
-    .min(6, "Password must be at least 6 characters"),
+    .max(10, "Password must be at least 10 characters"),
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match", 
     path: ["confirmPassword"], 
   });
 
 export default function SignupPage() {
-
+  const router = useRouter()
   const {register,handleSubmit,setError, formState:{errors,isSubmitting}, } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues:{
@@ -34,22 +36,23 @@ export default function SignupPage() {
       password: "",
       confirmPassword: "",
     },
-    mode: "onTouched", 
   })
 
   console.log(useForm())
 
   const onSubmit=async(data:FieldValues)=>{
     console.log( "Register data : ", data)
+    const toastId = toast.loading("Registered....");
     await new Promise((r)=> setTimeout(r,800))
-    alert("Register successfully")
+    toast.success("Account Registered successfully!", { id: toastId });
+    router.push('/signin')
   }
   return (
     <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
       {/* Left: Image */}
       <div className="relative hidden lg:block border-r border-r-amber-50">
         <Image
-          src={leftimage} // ✅ তুমি public/images এ image রাখো
+          src={leftimage}
           alt="Campus"
           fill
           className="object-content"
@@ -88,6 +91,9 @@ export default function SignupPage() {
                 `}
                 {...register('name')}
               />
+              {errors.name &&(
+                <p className="mt-1 text-xs text-red-500"> {errors.name.message} </p>
+              )}
             </div>
             <div>
               <label className="text-sm text-gray-700">Email</label>
