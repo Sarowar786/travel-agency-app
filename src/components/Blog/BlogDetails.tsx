@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BLOG_POSTS } from '../../components/UI/constants';
 import { ArrowLeft, Clock, Calendar, Share2, Twitter, Facebook, Linkedin, User, ChevronRight, Tag } from 'lucide-react';
 import { motion, useScroll, useSpring } from 'framer-motion';
