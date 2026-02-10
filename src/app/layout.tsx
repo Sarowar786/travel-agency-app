@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import toast, { Toaster } from 'react-hot-toast';
+import ReduxProvider from "@/redux/ReduxProvider";
 // import Navbar from "@/components/Navbar/page";
 // import Footer from "@/components/Footer/page";
 
@@ -33,7 +34,8 @@ export default function RootLayout({
       <body
         className={`${nunitoSans.variable} antialiased bg-white text-slate-900`}
       >
-        {/* <Navbar /> */}
+        <ReduxProvider>
+          {/* <Navbar /> */}
         {children}
         <Toaster
           position="bottom-right"
@@ -84,6 +86,7 @@ export default function RootLayout({
             },
           }}
         />
+        </ReduxProvider>
         {/* <Footer/> */}
         {/* Hidden Google Translate Element */}
         <div id="google_translate_element"></div>

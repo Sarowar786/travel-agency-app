@@ -62,7 +62,7 @@ const Navbar = () => {
     { label: "Blog", href: "/blogs" },
     { label: "About Us", href: "/about" },
     { label: "Contact Us", href: "/contact" },
-    { label: "Signin", href: "/signin" },
+    { label: "Signin", href: "/login" },
   ];
 
   const languages = [

@@ -7,6 +7,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import leftimage from '../../../../public/images/company-logo.png'
 import logo from '../../../../public/images/logonav.png'
+import { useLoginMutation } from "@/redux/api/authApi";
+import { useDispatch } from 'react-redux';
+import { setRefreshToken, setUser } from "@/redux/features/authSlice";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 // ✅ 1) Zod schema: rules এখানে define হবে
 const loginSchema = z.object({
@@ -32,14 +37,51 @@ export default function LoginPage() {
     },
   });
 
-  // ✅ 4) Submit handler: valid হলে এখানে আসবে
+  const [loginUser, {isLoading}] = useLoginMutation()
+  const dispatch =  useDispatch()
+  const router = useRouter()
+
   const onSubmit = async (data: FieldValues) => {
-    // এখানে তোমার API call হবে
-    console.log("LOGIN DATA:", data);
+
+    const payload = {
+      identifier: String(data.email).trim(),
+      password: String(data.password),
+    };
+    console.log("payload", payload);
+    
+
+    try {
+      const response = await loginUser(payload).unwrap()
+      console.log("response ", response);
+      
+      if(response.success && response?.data?.access){
+        dispatch(setUser({token: response.data.access}))
+        dispatch(setRefreshToken({refresh_token: response.data.refresh}))
+        toast.success("Login Successfull", {
+          style: {
+            background: "#111827",
+            color: "#fff",
+            border: "1px solid #F97316",
+          },
+          iconTheme: {
+            primary: "#F97316",
+            secondary: "#111827",
+          },
+        })
+
+        router.push('/');
+        return
+      }
+    } catch (error: any) {
+      const msg = error?.data?.message || error?.data?.error || "something went wrong, Please Try Again"
+      toast.error(msg, {
+        style: { background: "#FEF2F2", color: "#991B1B", border: "1px solid #FCA5A5" },
+      });
+    }
+    
 
     // demo delay
     await new Promise((r) => setTimeout(r, 800));
-    alert("Logged in (demo)");
   };
 
   return (
@@ -47,7 +89,7 @@ export default function LoginPage() {
       {/* Left: Image */}
       <div className="relative hidden lg:block border-r border-r-amber-50">
         <Image
-          src={leftimage} // ✅ তুমি public/images এ image রাখো
+          src={leftimage} 
           alt="Campus"
           fill
           className="object-content"
