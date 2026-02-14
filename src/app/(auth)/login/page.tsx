@@ -19,7 +19,7 @@ const loginSchema = z.object({
   password: z
     .string()
     .min(1, "Password is required")
-    .max(6, "Password must be at least 6 characters"),
+    .max(10, "Password max characters"),
 });
 
 
@@ -59,7 +59,7 @@ export default function LoginPage() {
         dispatch(setRefreshToken({refresh_token: response.data.refresh}))
         toast.success("Login Successfull", {
           style: {
-            background: "#111827",
+            background: "#1AC19C",
             color: "#fff",
             border: "1px solid #F97316",
           },
@@ -73,7 +73,8 @@ export default function LoginPage() {
         return
       }
     } catch (error: any) {
-      const msg = error?.data?.message || error?.data?.error || "something went wrong, Please Try Again"
+      console.log("error",error)
+      const msg = error?.message || error?.error.password || "something went wrong, Please Try Again"
       toast.error(msg, {
         style: { background: "#FEF2F2", color: "#991B1B", border: "1px solid #FCA5A5" },
       });
@@ -104,9 +105,9 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="flex flex-col items-center">
-            <div className="w-60 flex items-center justify-center">
+            <Link href={'/'} className="w-60 flex items-center justify-center">
               <Image src={logo} alt="logo"/>
-            </div>
+            </Link>
             <h1 className="mt-4 text-2xl font-semibold text-gray-900">
               Hey! Welcome back
             </h1>

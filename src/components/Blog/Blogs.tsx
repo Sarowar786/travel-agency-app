@@ -4,7 +4,7 @@ import { BLOG_POSTS } from '../UI/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, User, Search, ChevronDown, Tag, Share2, Twitter, Facebook, Linkedin, Filter } from 'lucide-react';
 import DottedMapBackground from './DottedMapBackground';
-import Image from 'next/image';
+
 
 // --- SleekPlane Component (Reused for consistency) ---
 const SleekPlane = ({ className }: { className?: string }) => (
@@ -222,7 +222,7 @@ const Blogs: React.FC<BlogsProps> = ({ onBlogClick }) => {
 
             {/* 1. HERO SECTION */}
             <div className="relative h-[50vh] bg-brand-navy overflow-hidden z-20">
-                <Image
+                <img
                     src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop"
                     alt="Travel Journal"
                     className="absolute inset-0 w-full h-full object-cover opacity-40"
@@ -343,7 +343,7 @@ const Blogs: React.FC<BlogsProps> = ({ onBlogClick }) => {
                             >
                                 <div className="grid grid-cols-1 md:grid-cols-2">
                                     <div className="relative h-64 md:h-auto overflow-hidden">
-                                        <Image
+                                        <img
                                             src={featuredPost.image}
                                             alt={featuredPost.title}
                                             className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
@@ -397,7 +397,7 @@ const Blogs: React.FC<BlogsProps> = ({ onBlogClick }) => {
                                         className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer border border-gray-100 flex flex-col h-full"
                                     >
                                         <div className="h-56 overflow-hidden relative">
-                                            <Image
+                                            <img
                                                 src={post.image}
                                                 alt={post.title}
                                                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"

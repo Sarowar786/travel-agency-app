@@ -1,52 +1,95 @@
-'use client'
+"use client";
 import Link from "next/link";
-import {z} from 'zod'
-import leftimage from '../../../../public/images/company-logo.png'
+import { z } from "zod";
+import leftimage from "../../../../public/images/company-logo.png";
 import Image from "next/image";
-import logo from '../../../../public/images/logonav.png'
+import logo from "../../../../public/images/logonav.png";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { p } from "framer-motion/client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useRegisterMutation } from "@/redux/api/authApi";
+import { useDispatch } from "react-redux";
 
-const registerSchema = z.object({
-  name: z.string().nonempty("Name is required"),
-  email: z.string().trim().nonempty("Email is required").email("Invalid email address"),
-  password: z
-    .string()
-    .min(1, "Password is required")
-    .max(10, "Password must be at least 10 characters"),
-  confirmPassword:z
-    .string()
-    .min(1, "Password is required")
-    .max(10, "Password must be at least 10 characters"),
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match", 
-    path: ["confirmPassword"], 
+const registerSchema = z
+  .object({
+    full_name: z.string().nonempty("Name is required"),
+    email: z
+      .string()
+      .trim()
+      .nonempty("Email is required")
+      .email("Invalid email address"),
+    password: z
+      .string()
+      .min(1, "Password is required")
+      .max(10, "Password must be at least 10 characters"),
+    confirm_password: z
+      .string()
+      .min(1, "Password is required")
+      .max(10, "Password must be at least 10 characters"),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
   });
 
 export default function SignupPage() {
-  const router = useRouter()
-  const {register,handleSubmit,setError, formState:{errors,isSubmitting}, } = useForm({
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
     resolver: zodResolver(registerSchema),
-    defaultValues:{
-      name:'',
+    defaultValues: {
+      full_name: "",
       email: "",
       password: "",
-      confirmPassword: "",
+      confirm_password: "",
     },
-  })
+  });
 
-  console.log(useForm())
+  const [registerUser, { isLoading }] = useRegisterMutation();
 
-  const onSubmit=async(data:FieldValues)=>{
-    console.log( "Register data : ", data)
-    const toastId = toast.loading("Registered....");
-    await new Promise((r)=> setTimeout(r,800))
-    toast.success("Account Registered successfully!", { id: toastId });
-    router.push('/signin')
-  }
+  const onSubmit = async (data: FieldValues) => {
+    const toastId = toast.loading("Registering...");
+
+    try {
+      const payload = {
+        full_name: data.full_name,
+        email: data.email.trim(),
+        password: data.password,
+        confirm_password: data.confirm_password,
+      };
+      console.log("payload", payload);
+
+      const res = await registerUser(payload).unwrap();
+      console.log("response ", res);
+
+      if (res?.success) {
+        const email = res?.data?.user_data?.email || data.email.trim();
+
+        toast.success(res?.message || "Registered successfully!", {
+          id: toastId,
+        });
+
+        // ✅ OTP verify page
+        router.push(`/otp-verify?email=${encodeURIComponent(email)}`);
+      } else {
+        toast.error(res?.message || "Registration failed!", { id: toastId });
+      }
+    } catch (error: any) {
+      console.log("REGISTER ERROR FULL =>", error);
+      console.log("REGISTER ERROR data =>", error?.data);
+      console.log("REGISTER ERROR status =>", error?.status);
+      const msg =
+        error?.data?.message || error?.error || "Something went wrong";
+      toast.error(msg, { id: toastId });
+    }
+  };
   return (
     <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
       {/* Left: Image */}
@@ -68,9 +111,9 @@ export default function SignupPage() {
           {/* Logo */}
           <div className="flex flex-col items-center">
             {/* চাইলে logo image দাও */}
-            <div className="w-60 flex items-center justify-center">
-              <Image src={logo} alt="logo"/>
-            </div>
+            <Link href={'/'} className="w-60 flex items-center justify-center">
+              <Image src={logo} alt="logo" />
+            </Link>
             <h1 className="mt-4 text-2xl font-semibold text-gray-900">
               Hey! Welcome
             </h1>
@@ -78,21 +121,22 @@ export default function SignupPage() {
           </div>
 
           {/* Form */}
-          <form 
-            onSubmit={handleSubmit(onSubmit)}
-          className="mt-8 space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
             <div>
               <label className="text-sm text-gray-700">Full Name</label>
               <input
                 type="text"
                 placeholder="Enter your name"
                 className={`mt-1 w-full rounded-lg border px-4 py-3 text-sm outline-none transition
-                  ${errors.email ? "border-red-500" : "border-gray-200 focus:border-orange-500"}
+                  ${errors.full_name ? "border-red-500" : "border-gray-200 focus:border-orange-500"}
                 `}
-                {...register('name')}
+                {...register("full_name")}
               />
-              {errors.name &&(
-                <p className="mt-1 text-xs text-red-500"> {errors.name.message} </p>
+              {errors.full_name && (
+                <p className="mt-1 text-xs text-red-500">
+                  {" "}
+                  {errors.full_name.message}{" "}
+                </p>
               )}
             </div>
             <div>
@@ -106,7 +150,9 @@ export default function SignupPage() {
                 {...register("email")}
               />
               {errors.email && (
-                <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-xs text-red-600">
+                  {errors.email.message}
+                </p>
               )}
             </div>
             <div>
@@ -133,11 +179,11 @@ export default function SignupPage() {
                 className={`mt-1 w-full rounded-lg border px-4 py-3 text-sm outline-none transition
                   ${errors.password ? "border-red-500" : "border-gray-200 focus:border-orange-500"}
                 `}
-                {...register("confirmPassword")}
+                {...register("confirm_password")}
               />
-              {errors.confirmPassword && (
+              {errors.confirm_password && (
                 <p className="mt-1 text-xs text-red-600">
-                  {errors.confirmPassword.message}
+                  {errors.confirm_password.message}
                 </p>
               )}
             </div>
@@ -151,7 +197,10 @@ export default function SignupPage() {
             {/* Footer */}
             <p className="text-center text-sm text-gray-500 mt-6">
               Already have an account?{" "}
-              <Link href="/login" className="text-orange-500 font-semibold hover:underline">
+              <Link
+                href="/login"
+                className="text-orange-500 font-semibold hover:underline"
+              >
                 Login
               </Link>
             </p>

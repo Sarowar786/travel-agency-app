@@ -7,42 +7,57 @@ import logo from '../../../../public/images/logonav.png'
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { p } from "framer-motion/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams, } from "next/navigation";
 import toast from "react-hot-toast";
+import { useResetPasswordMutation } from "@/redux/api/authApi";
 
 const registerSchema = z.object({
   password: z
     .string()
     .min(1, "Password is required")
     .max(10, "Password must be at least 10 characters"),
-  confirmPassword:z
+  confirm:z
     .string()
     .min(1, "Password is required")
     .max(10, "Password must be at least 10 characters"),
-}).refine((data) => data.password === data.confirmPassword, {
+}).refine((data) => data.password === data.confirm, {
     message: "Passwords don't match", 
-    path: ["confirmPassword"], 
+    path: ["confirm"], 
   });
 
-export default function SignupPage() {
+export default function ResetPassPage() {
   const router = useRouter()
-
+  const [resetPassword, {isLoading}] = useResetPasswordMutation();
+  const reset_token =useSearchParams().get("token")
+ 
   const {register,handleSubmit,setError, formState:{errors,isSubmitting}, } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues:{
       password: "",
-      confirmPassword: "",
+      confirm: "",
     },
   })
 
-  console.log(useForm())
+  // console.log(useForm())
+
 
   const onSubmit=async(data:FieldValues)=>{
-    console.log( "Register data : ", data)
-    const toastId = toast.loading("Changing password...");
-    await new Promise((r)=> setTimeout(r,800))
-    toast.success("Password changed successfully!", { id: toastId });
-    router.push("/")
+    console.log( "Reset pass data : ", data)
+    try {
+      const payload = {
+        password: data.password,
+        confirm: data.confirm,
+        reset_token: reset_token,
+      };
+      console.log("payload", payload);
+
+      const res = await resetPassword(payload).unwrap();
+      console.log("reset pass response ", res);
+      router.push('/login')
+    } catch (err:any) {
+      toast.error(err?.data?.message || "Something went wrong");
+    }
+    
   }
   return (
     <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
@@ -102,11 +117,11 @@ export default function SignupPage() {
                 className={`mt-1 w-full rounded-lg border px-4 py-3 text-sm outline-none transition
                   ${errors.password ? "border-red-500" : "border-gray-200 focus:border-orange-500"}
                 `}
-                {...register("confirmPassword")}
+                {...register("confirm")}
               />
-              {errors.confirmPassword && (
+              {errors.confirm && (
                 <p className="mt-1 text-xs text-red-600">
-                  {errors.confirmPassword.message}
+                  {errors.confirm.message}
                 </p>
               )}
             </div>
