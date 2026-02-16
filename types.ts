@@ -1,5 +1,6 @@
 
 import { LucideIcon } from 'lucide-react';
+import { style } from 'framer-motion/client';
 
 export interface TripCardData {
   id: string;
@@ -14,6 +15,13 @@ export interface TripCardData {
   badge?: string;
   offers?: string[];
   hashtags?: string[];
+  name?:string;
+  country?:string;
+  city?:string;
+  style?:string;
+  services?:string[]
+  current_price?:number;
+  features?:string[];
 }
 
 export interface ValuePropData {

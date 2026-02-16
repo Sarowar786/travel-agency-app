@@ -2,10 +2,14 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, Globe, ChevronDown, Check } from "lucide-react";
-import logo from "../../../public/images/logonav.png"
+import logo from "../../../public/images/logonav.png";
 import Image from "next/image";
+import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/redux/features/authSlice";
+import { RootState } from "@/redux/store";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -15,6 +19,13 @@ const Navbar = () => {
   const [currentLang, setCurrentLang] = useState<"EN" | "CN">("EN");
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
+
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  // ✅ Get auth token from Redux
+  const token = useSelector((state: RootState) => state.auth.token);
+  const isLoggedIn = !!token;
 
   /* Scroll background */
   useEffect(() => {
@@ -26,7 +37,10 @@ const Navbar = () => {
   /* Outside click for language dropdown */
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
+      if (
+        langMenuRef.current &&
+        !langMenuRef.current.contains(e.target as Node)
+      ) {
         setIsLangMenuOpen(false);
       }
     };
@@ -62,7 +76,7 @@ const Navbar = () => {
     { label: "Blog", href: "/blogs" },
     { label: "About Us", href: "/about" },
     { label: "Contact Us", href: "/contact" },
-    { label: "Signin", href: "/login" },
+    // { label: "Signin", href: "/login" },
   ];
 
   const languages = [
@@ -75,6 +89,15 @@ const Navbar = () => {
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
 
+  const handleLogout = () => {
+    dispatch(logout());
+    Cookies.remove("token");
+    Cookies.remove("accessToken");
+    localStorage.removeItem("accessToken");
+    setIsOpen(false);
+    router.push("/");
+  };
+
   return (
     <nav
       className={`fixed w-full z-60 transition-all duration-300 ${
@@ -82,7 +105,6 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-4 md:px-8 flex justify-between items-center">
-        
         {/* Logo */}
         <Link href="/" className="flex items-center">
           {/* <img src={logo} alt="Long Vacation Logo" /> */}
@@ -100,14 +122,39 @@ const Navbar = () => {
                     isActive(link.href)
                       ? "text-brand-green font-bold"
                       : isDarkText
-                      ? "text-brand-navy"
-                      : "text-white"
+                        ? "text-brand-navy"
+                        : "text-white"
                   }`}
                 >
                   {link.label}
                 </Link>
               </li>
             ))}
+            <li>
+              {isLoggedIn ? (
+                <button
+                  onClick={handleLogout}
+                  className={`font-medium hover:text-brand-coral ${
+                    isDarkText ? "text-brand-navy" : "text-white"
+                  }`}
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  className={`font-medium hover:text-brand-coral ${
+                    isActive("/login")
+                      ? "text-brand-green font-bold"
+                      : isDarkText
+                        ? "text-brand-navy"
+                        : "text-white"
+                  }`}
+                >
+                  Signin
+                </Link>
+              )}
+            </li>
           </ul>
 
           {/* Language Dropdown */}
@@ -132,7 +179,9 @@ const Navbar = () => {
                     key={lang.code}
                     onClick={() => handleLanguageChange(lang.code)}
                     className={`w-full px-4 py-2 flex justify-between text-sm hover:bg-gray-50 ${
-                      currentLang === lang.short ? "text-brand-teal" : "text-gray-600"
+                      currentLang === lang.short
+                        ? "text-brand-teal"
+                        : "text-gray-600"
                     }`}
                   >
                     {lang.label}
@@ -179,6 +228,26 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+
+          {/* Mobile: Logout/Signin Button */}
+          <div className="mt-6 pt-6">
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="w-full py-3 font-semibold text-brand-navy hover:bg-gray-100 rounded-lg transition"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="block w-full py-3 font-semibold text-brand-navy text-center hover:bg-gray-100 rounded-lg transition"
+              >
+                Signin
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </nav>

@@ -12,7 +12,7 @@ export const authApi = baseApi.injectEndpoints({
     }),
     register: builder.mutation({
       query: (credentials) => ({
-        url: "/users/register",
+        url: "/auth/register/",
         method: "POST",
         body: credentials,
       }),
@@ -28,7 +28,15 @@ export const authApi = baseApi.injectEndpoints({
     }),
     forgotPassword: builder.mutation({
       query: (email) => ({
-        url: "/auth/forgot-password",
+        url: "/auth/forgot-password/",
+        method: "POST",
+        body: email,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    resetEmailVerify: builder.mutation({
+      query: (email) => ({
+        url: "/auth/reset-email-verify/",
         method: "POST",
         body: email,
       }),
@@ -36,28 +44,28 @@ export const authApi = baseApi.injectEndpoints({
     }),
     resendOtp: builder.mutation({
       query: (email) => ({
-        url: "/auth/resend-otp",
+        url: "/auth/resend-otp/",
         method: "POST",
         body: email,
       }),
     }),
     verifyOtp: builder.mutation({
       query: (data) => ({
-        url: "/auth/verify-otp",
+        url: "/auth/otp-verify/",
         method: "POST",
         body: data,
       }),
     }),
     resetPassword: builder.mutation({
       query: (data) => ({
-        url: "/auth/reset-password",
+        url: "/auth/reset-password/",
         method: "POST",
         body: data,
       }),
     }),
     changePassword: builder.mutation({
       query: (data) => ({
-        url: "/auth/change-password",
+        url: "/auth/change-password/",
         method: "POST",
         body: data,
       }),
@@ -91,4 +99,5 @@ export const {
   useChangePasswordMutation,
   useGetMeQuery,
   useUpdateUserMutation,
+  useResetEmailVerifyMutation,
 } = authApi;
