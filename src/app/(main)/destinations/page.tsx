@@ -615,7 +615,7 @@ const Destinations = () => {
             )}
 
             {/* PAGINATION */}
-            {totalPages > 1 && (
+            {totalPages > 0 && (
               <div className="mt-20 mb-10 flex flex-col items-center select-none w-full">
                 {/* DESKTOP PAGINATION (Flight Path) */}
                 <div className="hidden md:flex items-center gap-6 md:gap-12 relative z-0">

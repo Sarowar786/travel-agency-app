@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -25,10 +25,11 @@ import {
   Mail,
   Link,
 } from "lucide-react";
-import { ActivityOption, DayItinerary } from "../../../types";
+import { ActivityOption, DayItinerary, ActivitySlot } from "../../../types";
 import ActivityCustomizationModal from "./ActivityCustomizationModal";
 import { ALL_PACKAGES } from "../../components/UI/constants";
 import TripCard from "../UI/TripCard";
+import { useGetSingleDestinationQuery } from "@/redux/api/destinationApi";
 // import { NavLink } from 'react-router-dom';
 
 interface PackageDetailsProps {
@@ -36,227 +37,6 @@ interface PackageDetailsProps {
 }
 
 // --- DATA ---
-
-const ALTERNATIVES_DAY1_NIGHT: ActivityOption[] = [
-  {
-    id: "d1n-walk",
-    title: "Jiefangbei Night Walk",
-    tagline: "The beating heart of Chongqing.",
-    description: [
-      "Explore the neon-lit pedestrian street.",
-      "Visit the Liberation Monument.",
-      "Street food tasting included.",
-    ],
-    energy: "Moderate",
-    priceChange: 0,
-    image:
-      "https://images.unsplash.com/photo-1570702580556-e4142750010c?q=80&w=1000",
-    tags: ["#CityVibes", "#StreetFood"],
-  },
-  {
-    id: "d1n-opera",
-    title: "Sichuan Opera VIP",
-    tagline: "Face-changing magic show.",
-    description: [
-      "Front row seats to legendary performance.",
-      "Private tea service included.",
-      "Backstage meet & greet.",
-    ],
-    energy: "Low",
-    priceChange: 45,
-    image:
-      "https://images.unsplash.com/photo-1535126320456-2244222c153f?q=80&w=1000",
-    tags: ["#Culture", "#Show"],
-  },
-];
-
-const ALTERNATIVES_DAY2_AFTERNOON: ActivityOption[] = [
-  {
-    id: "d2a-hongya",
-    title: "Hongyadong Exploration",
-    tagline: "The classic spirited away experience.",
-    description: [
-      "Explore the 11-story stilt house complex.",
-      "Best views of the Jialing River bridge.",
-      "Free entrance, self-guided.",
-    ],
-    energy: "Moderate",
-    priceChange: 0,
-    image:
-      "https://images.unsplash.com/photo-1535025639604-9a804c092faa?q=80&w=1000",
-    tags: ["#SpiritedAway", "#Photography"],
-  },
-  {
-    id: "d2a-drone",
-    title: "Cyberpunk Drone Photo",
-    tagline: "Be the star of your own sci-fi movie.",
-    description: [
-      "Professional drone operator follows you.",
-      "Receive a 1-minute 4K edited video.",
-      "Pose on the Qiansimen Bridge.",
-    ],
-    energy: "Low",
-    priceChange: 30,
-    image:
-      "https://images.unsplash.com/photo-1504222490345-c075b6008014?q=80&w=1000",
-    tags: ["#DroneShot", "#InfluencerMode"],
-  },
-  {
-    id: "d2a-bunker",
-    title: "Underground Food Bunker",
-    tagline: "Dining in a converted air-raid shelter.",
-    description: [
-      "Visit the hidden underworld of Chongqing.",
-      "Hotpot served in a cool, cave-like setting.",
-      "Includes private guide.",
-    ],
-    energy: "Moderate",
-    priceChange: 50,
-    image:
-      "https://images.unsplash.com/photo-1626284323204-635293427302?q=80&w=1000",
-    tags: ["#HiddenGem", "#History"],
-  },
-];
-
-const RAW_ITINERARY: DayItinerary[] = [
-  {
-    day: 1,
-    title: "Arrival & Cyberpunk Orientation",
-    summary: "Land in the 8D city and witness the futuristic skyline.",
-    slots: [
-      {
-        id: "d1-1",
-        time: "09:00",
-        icon: Car,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "Neon Skyline Airport Transfer",
-        staticDesc:
-          "Private MPV pickup. Catch your first glimpse of the 'Mountain City'.",
-        staticImage:
-          "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?q=80&w=1000",
-      },
-      {
-        id: "d1-2",
-        time: "11:00",
-        icon: Hotel,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "Hotel Check-in",
-        staticDesc: "Cyberpunk Riverside Hotel with panoramic Yangtze views.",
-      },
-      {
-        id: "d1-3",
-        time: "14:00",
-        icon: Train,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "Monorail Cliff Ride",
-        staticDesc:
-          "Experience the famous Liziba Station where the train passes through a building.",
-        staticImage:
-          "https://images.unsplash.com/photo-1555126634-323283e090fa?q=80&w=1000",
-      },
-      {
-        id: "d1-4",
-        time: "19:00",
-        icon: Moon,
-        changeable: true,
-        defaultActivityId: "d1n-walk",
-        options: ALTERNATIVES_DAY1_NIGHT,
-      },
-    ],
-  },
-  {
-    day: 2,
-    title: "Skyline Adventures",
-    summary: "From high-altitude bridges to underground bunkers.",
-    slots: [
-      {
-        id: "d2-1",
-        time: "09:00",
-        icon: Camera,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "Eling Park Skybridge",
-        staticDesc: "Bird's eye view of the peninsula.",
-      },
-      {
-        id: "d2-2",
-        time: "12:00",
-        icon: Utensils,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "Hotpot Lunch",
-        staticDesc: "Authentic 9-grid hotpot. Warning: Spicy!",
-        staticImage:
-          "https://images.unsplash.com/photo-1543886472-a7d03a55c259?q=80&w=1000",
-      },
-      {
-        id: "d2-3",
-        time: "15:00",
-        icon: Camera,
-        changeable: true,
-        defaultActivityId: "d2a-hongya",
-        options: ALTERNATIVES_DAY2_AFTERNOON,
-      },
-      {
-        id: "d2-4",
-        time: "21:00",
-        icon: Train,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "Light-Rail Night Run",
-        staticDesc: "A surreal night ride along the illuminated Jialing River.",
-      },
-    ],
-  },
-  {
-    day: 3,
-    title: "Old Town + Neon Nights",
-    summary: "Ancient culture meets futuristic finish.",
-    slots: [
-      {
-        id: "d3-1",
-        time: "10:00",
-        icon: Coffee,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "Ciqikou Old Town",
-        staticDesc: "Ming-dynasty architecture and tea houses.",
-        staticImage:
-          "https://images.unsplash.com/photo-1588665792275-23132711d51a?q=80&w=1000",
-      },
-      {
-        id: "d3-2",
-        time: "13:00",
-        icon: Ship,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "River Cruise",
-        staticDesc: "Farewell lunch cruise on the Yangtze.",
-      },
-      {
-        id: "d3-3",
-        time: "16:00",
-        icon: Users,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "Free & Easy",
-        staticDesc: "Last minute shopping or relaxation.",
-      },
-      {
-        id: "d3-4",
-        time: "19:00",
-        icon: Car,
-        changeable: false,
-        defaultActivityId: "",
-        staticTitle: "Airport Transfer",
-        staticDesc: "Heading home.",
-      },
-    ],
-  },
-];
 
 const BASE_PRICE = 880;
 
@@ -308,28 +88,152 @@ const AccordionItem = ({
   );
 };
 
+interface ApiDestination {
+  id: number;
+  title: string;
+  city: string;
+  style: string;
+  min_pax: string;
+  image: string;
+}
+
+interface ApiCustomizeItem {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+}
+
+interface ApiInnerItinerary {
+  id: number;
+  start_time: string;
+  title: string;
+  description: string;
+  image: string | null;
+  is_customize: boolean;
+  customize_items: ApiCustomizeItem[];
+}
+
+interface ApiItinerary {
+  destination: ApiDestination;
+  id: number;
+  day: number;
+  title: string;
+  description: string;
+  inner_itineraries: ApiInnerItinerary[];
+}
+
 interface PackageDetailsProps {
   onNavigateBack: () => void;
   onNavigateBooking: () => void;
+  id: string;
 }
 
+// Transform API data to DayItinerary format
+const transformApiItinerariesToDayItineraries = (
+  apiItineraries: ApiItinerary[],
+): DayItinerary[] => {
+  return apiItineraries.map((apiDay) => {
+    const slots: ActivitySlot[] = apiDay.inner_itineraries.map((innerItem) => {
+      const slot: ActivitySlot = {
+        id: `day${apiDay.day}-inner${innerItem.id}`,
+        time: innerItem.start_time.slice(0, 5), // Get HH:MM from HH:MM:SS
+        icon: Camera, // Default icon, can be customized based on type
+        changeable: innerItem.is_customize,
+        defaultActivityId: "",
+        staticTitle: innerItem.title,
+        staticDesc: innerItem.description,
+        staticImage: innerItem.image || undefined,
+      };
+
+      if (innerItem.is_customize && innerItem.customize_items.length > 0) {
+        slot.options = innerItem.customize_items.map((item) => ({
+          id: `customize-${item.id}`,
+          title: item.title,
+          tagline: item.description,
+          description: [item.description],
+          energy: "Moderate" as const,
+          priceChange: item.price || 0,
+          image: item.image,
+          tags: [],
+        }));
+        slot.defaultActivityId = `customize-${innerItem.customize_items[0].id}`;
+      }
+
+      return slot;
+    });
+
+    return {
+      day: apiDay.day,
+      title: apiDay.title,
+      summary: apiDay.description,
+      slots,
+    };
+  });
+};
+
 const PackageDetails: React.FC<PackageDetailsProps> = ({
+  id,
   onNavigateBack,
   onNavigateBooking,
 }) => {
   const [expandedDay, setExpandedDay] = useState<number | null>(1);
-  const [selections, setSelections] = useState<Record<string, string>>({
-    "d1-4": "d1n-walk",
-    "d2-3": "d2a-hongya",
-  });
+  const [selections, setSelections] = useState<Record<string, string>>({});
   const [editingSlotId, setEditingSlotId] = useState<string | null>(null);
   const [isBookingDrawerOpen, setIsBookingDrawerOpen] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+
+  // api calling
+  const {
+    data: trip,
+    isLoading,
+    isError,
+  } = useGetSingleDestinationQuery(id, {
+    skip: !id,
+  });
+  const apiItineraries = (trip?.data?.itineraries ?? []) as ApiItinerary[];
+  const destination = apiItineraries?.[0]?.destination;
+
+  // Transform API data to component format
+  const transformedItineraries = useMemo(
+    () => transformApiItinerariesToDayItineraries(apiItineraries),
+    [apiItineraries],
+  );
+
+  // Initialize selections for customizable items
+  // useMemo(() => {
+  //   const newSelections: Record<string, string> = {};
+  //   transformedItineraries.forEach((day) => {
+  //     day.slots.forEach((slot) => {
+  //       if (slot.changeable && slot.defaultActivityId) {
+  //         newSelections[slot.id] = slot.defaultActivityId;
+  //       }
+  //     });
+  //   });
+  //   setSelections(newSelections);
+  // }, [transformedItineraries]);
+
+  useEffect(() => {
+    if (transformedItineraries.length > 0 && !initialized) {
+      const newSelections: Record<string, string> = {};
+      transformedItineraries.forEach((day) => {
+        day.slots.forEach((slot) => {
+          if (slot.changeable && slot.defaultActivityId) {
+            newSelections[slot.id] = slot.defaultActivityId;
+          }
+        });
+      });
+      setSelections(newSelections);
+      setInitialized(true);
+    }
+  }, [transformedItineraries, initialized]);
 
   // --- CALCULATIONS ---
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
-    RAW_ITINERARY.forEach((day) => {
+    transformedItineraries.forEach((day) => {
       day.slots.forEach((slot) => {
         if (slot.changeable && slot.options) {
           const selectedId = selections[slot.id];
@@ -341,14 +245,24 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
       });
     });
     return total;
-  }, [selections]);
+  }, [selections, transformedItineraries]);
 
-  const relatedTrips = useMemo(() => {
-    // Exclude current package ID '1' (Chongqing)
-    const others = ALL_PACKAGES.filter((p) => p.id !== "1");
-    // Simple shuffle
-    return others.sort(() => 0.5 - Math.random()).slice(0, 3);
-  }, []);
+  
+
+  if (!destination) {
+    return (
+      <div className="p-6">
+        {isLoading ? "Loading..." : "No destination found."}
+      </div>
+    );
+  }
+
+  // const relatedTrips = useMemo(() => {
+  //   // Exclude current package ID '1' (Chongqing)
+  //   const others = ALL_PACKAGES.filter((p) => p.id !== "1");
+  //   // Simple shuffle
+  //   return others.sort(() => 0.5 - Math.random()).slice(0, 3);
+  // }, []);
 
   const handleConfirmSelection = (slotId: string, optionId: string) => {
     setSelections((prev) => ({ ...prev, [slotId]: optionId }));
@@ -357,13 +271,16 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
   const handleCloseModal = () => setEditingSlotId(null);
 
   const editingSlot = editingSlotId
-    ? RAW_ITINERARY.flatMap((d) => d.slots).find((s) => s.id === editingSlotId)
+    ? transformedItineraries
+        .flatMap((d) => d.slots)
+        .find((s) => s.id === editingSlotId)
     : null;
 
   // Derive day number for modal
   const editingDayNumber = editingSlotId
-    ? RAW_ITINERARY.find((d) => d.slots.some((s) => s.id === editingSlotId))
-        ?.day || 1
+    ? transformedItineraries.find((d) =>
+        d.slots.some((s) => s.id === editingSlotId),
+      )?.day || 1
     : 1;
 
   const getFormattedTime = (time: string) => {
@@ -434,8 +351,8 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1535025639604-9a804c092faa?q=80&w=1000"
-            alt="Chongqing Cyberpunk"
+            src={destination?.image}
+            alt={destination?.title}
             className="w-full h-full object-cover opacity-60"
           />
           <div className="absolute inset-0 bg-linear-to-t from-brand-navy via-brand-navy/30 to-black/30"></div>
@@ -466,7 +383,8 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-none drop-shadow-sm max-w-5xl">
-              Chongqing Cyberpunk
+              {destination?.title}
+
               <br />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-green to-teal-200">
                 Weekend Escape
@@ -479,7 +397,8 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
                   Duration
                 </p>
                 <p className="font-bold text-xl flex items-center gap-2">
-                  <Calendar size={18} className="text-brand-green" /> 3 Nights
+                  <Calendar size={18} className="text-brand-green" />{" "}
+                  {transformedItineraries.length} Nights
                 </p>
               </div>
               <div>
@@ -487,7 +406,8 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
                   Location
                 </p>
                 <p className="font-bold text-xl flex items-center gap-2">
-                  <MapPin size={18} className="text-brand-green" /> Chongqing
+                  <MapPin size={18} className="text-brand-green" />{" "}
+                  {destination?.city}
                 </p>
               </div>
               <div>
@@ -495,7 +415,8 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
                   Style
                 </p>
                 <p className="font-bold text-xl flex items-center gap-2">
-                  <Zap size={18} className="text-brand-green" /> Adventure
+                  <Zap size={18} className="text-brand-green" />{" "}
+                  {destination?.style}
                 </p>
               </div>
               <div>
@@ -503,7 +424,8 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
                   Min Pax
                 </p>
                 <p className="font-bold text-xl flex items-center gap-2">
-                  <Users size={18} className="text-brand-green" /> 2 To Go
+                  <Users size={18} className="text-brand-green" />{" "}
+                  {destination?.min_pax}
                 </p>
               </div>
             </div>
@@ -521,7 +443,7 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
             </h2>
 
             <div className="space-y-8">
-              {RAW_ITINERARY.map((day) => (
+              {transformedItineraries.map((day) => (
                 <div key={day.day} className="relative pl-0 md:pl-8">
                   {/* Day Marker (Desktop Line) */}
                   <div className="md:absolute left-0 top-0 bottom-0 w-px bg-gray-200 hidden md:block"></div>

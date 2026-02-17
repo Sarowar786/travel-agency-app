@@ -12,8 +12,9 @@ export const destinationApi = baseApi.injectEndpoints({
     }),
     getSingleDestination: builder.query({
         query: (id) => ({
-            url: `/destinations/details/${id}/`,
+            url: `/destinations/detail/${id}/`,
             method: "GET",
+            id:{...id},
             providesTags: ["Destinations"],
         }),
     }),
