@@ -1,113 +1,137 @@
-// Step 2 এ বসাবে — must have access to `form`
-// Example: const form = useForm<FormValues>({...})
-// const { control, watch, getValues } = form;
-
 type ReviewProps = {
-    form: any;                 // better: UseFormReturn<FormValues>
-    onEdit?: () => void;       // optional: step=1 এ ফেরত যাবে
+  form: any;
+  onEdit?: () => void;
+  adultCount: number; // Add this
 };
 
-const ReviewBookingStep: React.FC<ReviewProps> = ({ form, onEdit }) => {
-    // Live update চাইলে watch() use করো
-    const data = form.watch(); // step-2 তে আসার পরে step-1 তে কিছু change করলে এখানেও reflect করবে
+const ReviewBookingStep: React.FC<ReviewProps> = ({
+  form,
+  onEdit,
+  adultCount,
+}) => {
+  // Live update 
+  const data = form.watch();
 
-    const primary = data?.primaryContact;
-    const travellers = data?.travellers || [];
-    const discountCode = data?.discountCode;
-    const referredSalesStaffName = data?.referredSalesStaffName;
-    const termsAccepted = data?.termsAccepted;
-    const privacyAccepted = data?.privacyAccepted;
+  const primary = data?.primaryContact;
+  const travellers = data?.travellers || [];
+  const discountCode = data?.discountCode;
+  const referredSalesStaffName = data?.referredSalesStaffName;
+  const isTermsAccepted = data?.termsAccepted;
+  const isPrivacyAccepted = data?.privacyAccepted;
 
-    const Row = ({ label, value }: { label: string; value: any }) => (
-        <div className="flex items-start justify-between gap-6 border-b border-slate-100 py-2">
-            <p className="text-sm font-medium text-slate-600">{label}</p>
-            <p className="text-sm font-semibold text-slate-900 text-right wrap-break-words">
-                {value ?? <span className="text-slate-400 font-medium">—</span>}
-            </p>
+  // Helper for rows
+  const Row = ({ label, value }: { label: string; value: any }) => (
+    <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+      <span className="text-sm font-medium text-gray-500">{label}</span>
+      <span className="text-sm font-semibold text-gray-900 text-right max-w-[60%] break-words">
+        {value || <span className="text-gray-400 italic">Not provided</span>}
+      </span>
+    </div>
+  );
+
+  // Helper for cards
+  const Card = ({
+    title,
+    children,
+  }: {
+    title: string;
+    children: React.ReactNode;
+  }) => (
+    <div className="rounded-xl border border-brand-sand bg-white shadow-sm overflow-hidden mb-6 last:mb-0">
+      <div className="px-5 py-3 bg-teal-800 text-white font-bold text-sm tracking-wide uppercase">
+        {title}
+      </div>
+      <div className="p-5 space-y-1">{children}</div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6 animate-fadeIn">
+      {/* Header */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-bold text-blue-900">
+            Review Your Details
+          </h3>
+          <p className="text-sm text-blue-700 mt-1">
+            Please ensure all information is correct before proceeding to
+            payment.
+          </p>
         </div>
-    );
+        {onEdit && (
+          <button
+            type="button"
+            onClick={onEdit}
+            className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline px-2 py-1"
+          >
+            Edit
+          </button>
+        )}
+      </div>
 
-    const Card = ({ title, children }: { title: string; children: React.ReactNode }) => (
-        <div className="rounded-xl border border-brand-sand bg-white shadow-lg">
-            <div className="px-5 py-3 bg-teal-800 text-white font-semibold rounded-t-xl">
-                {title}
-            </div>
-            <div className="p-5 space-y-1">{children}</div>
+      {/* Primary Contact */}
+      <Card title="Primary Contact">
+        <Row label="Name" value={primary?.name} />
+        <Row label="Email" value={primary?.email} />
+        <Row label="Mobile" value={primary?.mobile} />
+        <Row label="Address" value={primary?.address} />
+      </Card>
+
+      {/* Travellers */}
+      <div className="space-y-6">
+        {travellers.length === 0 ? (
+          <div className="text-center p-6 bg-gray-50 rounded-lg border border-gray-200 text-gray-500 italic">
+            No travellers added.
+          </div>
+        ) : (
+          travellers.map((t: any, idx: number) => (
+            <Card
+              key={idx}
+              title={`Traveller ${idx + 1} - ${idx < adultCount ? "ADULT" : "CHILD"}`}
+            >
+              <Row label="Name" value={t?.name} />
+              <Row label="Email" value={t?.email} />
+              <Row label="Mobile" value={t?.mobile} />
+              <Row label="Nationality" value={t?.nationality} />
+              <Row label="Date of Birth" value={t?.dateOfBirth} />
+              <Row label="Passport No." value={t?.passportNo} />
+              <Row label="Expiry Date" value={t?.expiryDate} />
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Discount + Staff */}
+      {(discountCode || referredSalesStaffName) && (
+        <Card title="Additional Information">
+          {discountCode && <Row label="Discount Code" value={discountCode} />}
+          {referredSalesStaffName && (
+            <Row label="Referred By" value={referredSalesStaffName} />
+          )}
+        </Card>
+      )}
+
+      {/* Agreements */}
+      <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 text-sm">
+        <div className="flex items-center gap-2 mb-2">
+          <span
+            className={isTermsAccepted ? "text-green-600" : "text-gray-400"}
+          >
+            {isTermsAccepted ? "✔" : "○"}
+          </span>
+          <span className="text-gray-700">Terms and Conditions Accepted</span>
         </div>
-    );
-
-    return (
-        <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h3 className="text-xl font-bold text-slate-900">Review & Payment</h3>
-                    <p className="text-sm text-slate-500">
-                        Please review your details before proceeding to checkout.
-                    </p>
-                </div>
-
-                {onEdit ? (
-                    <button
-                        type="button"
-                        onClick={onEdit}
-                        className="h-10 rounded-md border border-slate-200 bg-white px-4 text-sm font-semibold hover:bg-slate-50"
-                    >
-                        Edit Details
-                    </button>
-                ) : null}
-            </div>
-
-            {/* Primary Contact */}
-            <Card title="PRIMARY CONTACT">
-                <Row label="Name" value={primary?.name} />
-                <Row label="Email" value={primary?.email} />
-                <Row label="Mobile" value={primary?.mobile} />
-                <Row label="Address" value={primary?.address} />
-            </Card>
-
-            {/* Travellers */}
-            <div className="space-y-4">
-                {travellers.length === 0 ? (
-                    <div className="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600">
-                        No travellers added.
-                    </div>
-                ) : (
-                    travellers.map((t: any, idx: number) => (
-                        <Card key={idx} title={`TRAVELLER ${idx + 1}`}>
-                            <Row label="Name" value={t?.name} />
-                            <Row label="Email" value={t?.email} />
-                            <Row label="Mobile" value={t?.mobile} />
-                            <Row label="Nationality" value={t?.nationality} />
-                            <Row label="Date of Birth" value={t?.dateOfBirth} />
-                            <Row label="Passport No." value={t?.passportNo} />
-                            <Row label="Expiry Date" value={t?.expiryDate} />
-                        </Card>
-                    ))
-                )}
-            </div>
-
-            {/* Discount + Staff */}
-            <Card title="DISCOUNT & REFERRAL">
-                <Row label="Discount Code" value={discountCode || "—"} />
-                <Row label="Referred Sales Staff" value={referredSalesStaffName || "—"} />
-            </Card>
-
-            {/* Agreements */}
-            <Card title="AGREEMENTS">
-                <Row label="Accepted Terms" value={termsAccepted ? "Yes" : "No"} />
-                <Row label="Accepted Privacy Policy" value={privacyAccepted ? "Yes" : "No"} />
-            </Card>
-
-            {/* Payment placeholder */}
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-lg">
-                <p className="text-sm font-semibold text-slate-800">Payment Method</p>
-                <p className="mt-1 text-sm text-slate-500">
-                    Put your payment UI here (card/bank/paynow etc.)
-                </p>
-            </div>
+        <div className="flex items-center gap-2">
+          <span
+            className={isPrivacyAccepted ? "text-green-600" : "text-gray-400"}
+          >
+            {isPrivacyAccepted ? "✔" : "○"}
+          </span>
+          <span className="text-gray-700">Privacy Policy Accepted</span>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default ReviewBookingStep;

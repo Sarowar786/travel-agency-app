@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ReviewBookingStep from "./ReviewBookingStep";
 import { CheckoutCountdown } from "./CheckoutCountdown";
-
+import { useGetTourBookingFirstStepMutation } from "@/redux/api/destinationApi";
 
 type SummaryRowProps = {
   label: string;
@@ -45,45 +45,6 @@ const steps = [
   { key: 2 as StepKey, label: "REVIEW & PAYMENT" },
 ];
 
-// const StepHeader = ({ currentStep }: { currentStep: StepKey }) => {
-//   return (
-//     <div className="flex items-center justify-center mb-8 max-w-2xl mx-auto p-5 bg-gray-200 rounded-xl">
-//       <div className="flex items-center justify-between space-x-8">
-//         {steps.map((s, idx) => {
-//           const isDone = s.key < currentStep;
-//           const isActive = s.key === currentStep;
-
-//           const circleClass = isDone
-//             ? "bg-orange-500"
-//             : isActive
-//               ? "bg-orange-500"
-//               : "bg-gray-400";
-
-//           const textClass = isDone
-//             ? "text-gray-500"
-//             : isActive
-//               ? "text-orange-500"
-//               : "text-gray-500";
-
-//           return (
-//             <div >
-//               <div key={s.key} className={`flex flex-col gap-1 items-center space-x-2  ${textClass}`}>
-//                 <span
-//                   className={`w-8 h-8 rounded-full ${circleClass} text-white flex items-center justify-center text-sm`}
-//                 >
-//                   {isDone ? "✓" : idx + 1}
-//                 </span>
-//                 <span className="text-sm">{s.label}</span>
-//               </div>
-//             </div>
-//           );
-//         })}
-//       </div>
-//     </div>
-//   );
-// };
-
-//====================
 //passenger details
 
 const StepHeader = ({ currentStep }: { currentStep: StepKey }) => {
@@ -94,11 +55,12 @@ const StepHeader = ({ currentStep }: { currentStep: StepKey }) => {
           const isDone = s.key <= currentStep;
           const isActive = s.key === currentStep;
 
-          const circleClass = isDone || isActive ? "bg-orange-500" : "bg-gray-400";
+          const circleClass =
+            isDone || isActive ? "bg-orange-500" : "bg-gray-400";
           const labelClass = isActive ? "text-orange-500" : "text-gray-500";
 
-          // connector: left step done হলে orange, না হলে gray
-          const connectorClass = s.key <= currentStep ? "bg-[#0D8B9E]" : "bg-gray-400";
+          const connectorClass =
+            s.key <= currentStep ? "bg-[#0D8B9E]" : "bg-gray-400";
 
           return (
             <React.Fragment key={s.key}>
@@ -109,7 +71,9 @@ const StepHeader = ({ currentStep }: { currentStep: StepKey }) => {
                 >
                   {isDone ? "✓" : idx + 1}
                 </span>
-                <span className={`text-xs font-medium absolute top-9 w-40 flex items-center justify-center ${labelClass}`}>
+                <span
+                  className={`text-xs font-medium absolute top-9 w-40 flex items-center justify-center ${labelClass}`}
+                >
                   {s.label}
                 </span>
               </div>
@@ -127,8 +91,6 @@ const StepHeader = ({ currentStep }: { currentStep: StepKey }) => {
     </div>
   );
 };
-
-
 
 const phoneRegex = /^[0-9+\-\s()]{7,20}$/;
 
@@ -149,10 +111,18 @@ const travellerSchema = z
     const dob = new Date(data.dateOfBirth);
     const exp = new Date(data.expiryDate);
     if (Number.isNaN(dob.getTime())) {
-      ctx.addIssue({ code: "custom", path: ["dateOfBirth"], message: "Invalid date" });
+      ctx.addIssue({
+        code: "custom",
+        path: ["dateOfBirth"],
+        message: "Invalid date",
+      });
     }
     if (Number.isNaN(exp.getTime())) {
-      ctx.addIssue({ code: "custom", path: ["expiryDate"], message: "Invalid date" });
+      ctx.addIssue({
+        code: "custom",
+        path: ["expiryDate"],
+        message: "Invalid date",
+      });
     }
 
     const today = new Date();
@@ -167,7 +137,6 @@ const travellerSchema = z
     }
   });
 
-
 const formSchema = z.object({
   primaryContact: z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -176,22 +145,23 @@ const formSchema = z.object({
     address: z.string().min(5, "Address is required"),
   }),
 
-  travellers: z.array(travellerSchema).length(2, "Exactly 2 travellers are required"),
+  travellers: z
+    .array(travellerSchema)
+    .min(1, "At least one traveller is required"),
 
   // Optional fields
   discountCode: z.string().optional(),
   referredSalesStaffName: z.string().optional(),
 
   // ✅ Checkbox validation (fixed)
-  termsAccepted: z
-    .boolean()
-    .refine(val => val === true, { message: "You must accept the terms and conditions" }),
+  termsAccepted: z.boolean().refine((val) => val === true, {
+    message: "You must accept the terms and conditions",
+  }),
 
-  privacyAccepted: z
-    .boolean()
-    .refine(val => val === true, { message: "You must accept the privacy policy" }),
+  privacyAccepted: z.boolean().refine((val) => val === true, {
+    message: "You must accept the privacy policy",
+  }),
 });
-
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -216,23 +186,110 @@ function Field({
 function SectionTitle({ title, color }: { title: string; color?: string }) {
   return (
     <div className="flex items-center justify-between">
-      <h3 className={`text-xs font-semibold tracking-wide ${color ?? "text-slate-700"}`}>
+      <h3
+        className={`text-xs font-semibold tracking-wide ${color ?? "text-slate-700"}`}
+      >
         {title}
       </h3>
     </div>
   );
 }
 
-
 export default function MakeBooking() {
   const router = useRouter();
   const [step, setStep] = useState<StepKey>(0);
+  const [dropdowns, setDropdowns] = useState([{ value: "", label: "" }]); // Start with one dropdown
+  const [dropdownData, setDropdownData] = useState([]); // Store the data from the API
 
-  const handleNext = () => {
-    if (step === 0) return setStep(1);
+  const searchParams = useSearchParams();
+  const adultFare = Number(searchParams.get("adult_fare")) || 0;
+  const childFare = Number(searchParams.get("child_fare")) || 0;
+  const singleBedFare = Number(searchParams.get("single_bed_price")) || 0;
+  const twinBedFare = Number(searchParams.get("twin_bed_price")) || 0;
+  const tripleBedFare = Number(searchParams.get("triple_bed_price")) || 0;
+  const taxFare = Number(searchParams.get("tax_fare")) || 0;
+  const booking = searchParams.get("booking");
+  console.log('booking id sdfsaidfhsdf', booking)
+
+  // Flight Details
+  const departureDate = searchParams.get("going_date") || "N/A";
+  const returnDate = searchParams.get("coming_date") || "N/A";
+
+  const tourDetails = {
+    destination_id: searchParams.get("destination_id"),
+    tour_id: searchParams.get("tour_id"),
+    going_flight: searchParams.get("going_flight"),
+    coming_flight: searchParams.get("coming_flight"),
+    going_date: searchParams.get("going_date"),
+    going_start_schedule: searchParams.get("going_start_schedule"),
+    going_end_schedule: searchParams.get("going_end_schedule"),
+    coming_start_schedule: searchParams.get("coming_start_schedule"),
+    coming_end_schedule: searchParams.get("coming_end_schedule"),
+    // booking: searchParams.get(booking),
+  };
+  console.log(tourDetails, "tour details");
+
+  const [adultCount, setAdultCount] = useState(1);
+  const [childCount, setChildCount] = useState(0);
+  const [singleBedCount, setSingleBedCount] = useState(0);
+  const [twinBedCount, setTwinBedCount] = useState(0);
+  const [tripleBedCount, setTripleBedCount] = useState(0);
+  const [bookingResponse, setBookingResponse] = useState<any>(null);
+
+  const totalPax = adultCount + childCount;
+  const subTotal =
+    adultCount * adultFare +
+    childCount * childFare +
+    singleBedCount * singleBedFare +
+    twinBedCount * twinBedFare +
+    tripleBedCount * tripleBedFare;
+
+  const totalTax = totalPax * taxFare;
+  const totalPrice = subTotal + totalTax;
+
+  const [
+    getTourBookingFirstStep,
+    { data: tourBookingFirstStepData, isLoading },
+  ] = useGetTourBookingFirstStepMutation();
+
+  const handleNext = async () => {
+    if (step === 0) {
+      // Sync travellers array size with totalPax
+      const currentTravellers = form.getValues("travellers");
+      if (currentTravellers.length !== totalPax) {
+        // Create new array based on current travellers or empty defaults
+        const newTravellers = [...currentTravellers];
+        console.log("newTravellers", newTravellers);
+
+        if (newTravellers.length < totalPax) {
+          // Add missing travellers
+          for (let i = newTravellers.length; i < totalPax; i++) {
+            newTravellers.push({
+              name: "",
+              email: "",
+              mobile: "",
+              nationality: "",
+              dateOfBirth: "",
+              passportNo: "",
+              expiryDate: "",
+            });
+          }
+        } else if (newTravellers.length > totalPax) {
+          // Remove extra travellers
+          newTravellers.length = totalPax;
+        }
+
+        // Update form value
+        form.setValue("travellers", newTravellers);
+      }
+      return setStep(1);
+    }
     if (step === 1) return setStep(2);
-    // last step -> checkout/confirmation
-    router.push("/checkout"); // or "/checkout"
+    if (step === 2) {
+      // On the review step, submit the form to create the booking
+      const formValues = form.getValues();
+      await onSubmit(formValues);
+    }
   };
 
   const nextLabel = useMemo(() => {
@@ -258,15 +315,6 @@ export default function MakeBooking() {
           passportNo: "",
           expiryDate: "",
         },
-        {
-          name: "",
-          email: "",
-          mobile: "",
-          nationality: "",
-          dateOfBirth: "",
-          passportNo: "",
-          expiryDate: "",
-        },
       ],
     },
   });
@@ -283,11 +331,53 @@ export default function MakeBooking() {
     reset,
   } = form;
 
-  const onSubmit = (values: FormValues) => {
-    console.log("SUBMIT:", values);
-    // TODO: API call
-    // Move to next step after validation passes
-    setStep(2);
+  const onSubmit = async (values: FormValues) => {
+    console.log("submited");
+    const bookingData = {
+      destination_id: tourDetails.destination_id,
+      booking: booking,
+      single_bed_price: singleBedFare,
+      twin_bed_price: twinBedFare,
+      triple_bed_price: tripleBedFare,
+      tour: tourDetails.tour_id,
+      adult_number: adultCount,
+      child_number: childCount,
+      adult_price: adultFare,
+      child_price: childFare,
+      single_bed_count: singleBedCount,
+      twin_bed_count: twinBedCount,
+      triple_bed_count: tripleBedCount,
+      tax_price: taxFare,
+      booking_total_price:totalPrice,
+      travellers: values.travellers,
+      primary_name: values.primaryContact.name,
+      primary_email: values.primaryContact.email,
+      primary_mobile: values.primaryContact.mobile,
+      primary_address: values.primaryContact.address,
+
+      // Discount/Staff
+      discount_code: values.discountCode || null,
+      staff_name: values.referredSalesStaffName || null,
+
+      is_accept: values.termsAccepted,
+      is_agree: values.privacyAccepted,
+    };
+    console.log(bookingData, "booking data last step");
+
+    try {
+      const res = await getTourBookingFirstStep(bookingData).unwrap();
+      console.log(res, "booking response");
+      if (res?.status === "success") {
+        setBookingResponse(res.data);
+        // Navigate to checkout with booking ID
+        router.push(
+          `/checkout?booking_id=${tourDetails.destination_id}&destination_id=${tourDetails.destination_id}`,
+        );
+      }
+    } catch (err) {
+      console.error("Booking Error:", err);
+      // Handle error message
+    }
   };
 
   const inputClass =
@@ -331,8 +421,9 @@ export default function MakeBooking() {
           <div className="col-span-12 lg:col-span-8 space-y-6">
             {step === 0 && (
               <>
-                {/* ✅ TOUR OVERVIEW content: তুমি এখানে যেগুলো দেখাতে চাও বসাবে */}
+                {/* ✅ TOUR OVERVIEW content*/}
                 <div className="col-span-12 lg:col-span-8 space-y-6">
+                  {/* Tour Details */}
                   {/* Tour Details */}
                   <div className="border border-brand-sand rounded-xl">
                     <div className="bg-teal-800 text-white px-4 py-2 font-semibold rounded-t-xl">
@@ -341,112 +432,177 @@ export default function MakeBooking() {
 
                     <div className="p-4 space-y-2">
                       <h3 className="font-bold text-black">
-                        7D NEW MT. LU/MT. DAJUE + WUYUAN
+                        Your Flight Details
                       </h3>
 
-                      <div className="grid grid-cols-2 gap-4 text-gray-600 pt-3">
-                        <div>
-                          <p className="font-medium text-sm text-gray-500">DEPARTURE DATE</p>
-                          <p className="font-semibold text-black">
-                            Wed, 18 Feb 2026 ✈
-                          </p>
+                      <div className="grid grid-cols-1 gap-4 text-gray-600 pt-3">
+                        {/* Going Flight */}
+                        <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="font-bold text-teal-800">
+                              DEPARTURE
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {tourDetails.going_date}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center text-sm">
+                            <span>{tourDetails.going_flight}</span>
+                            <span className="font-semibold">
+                              {tourDetails.going_start_schedule} ✈{" "}
+                              {tourDetails.going_end_schedule}
+                            </span>
+                          </div>
                         </div>
 
-                        <div>
-                          <p className="font-medium text-sm text-gray-500">RETURN DATE</p>
-                          <p className="font-semibold text-black">
-                            Tue, 24 Feb 2026
-                          </p>
-                        </div>
-
-                        <div>
-                          <p className="font-medium text-sm text-gray-500 pt-3">TOUR CODE</p>
-                          <p className="font-semibold text-black">
-                            02CKH1D 18/26MU
-                          </p>
+                        {/* Coming Flight */}
+                        <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="font-bold text-teal-800">
+                              RETURN
+                            </span>
+                            {/* <span className="text-xs text-gray-500">{tourDetails.coming_date}</span> */}
+                          </div>
+                          <div className="flex justify-between items-center text-sm">
+                            <span>{tourDetails.coming_flight}</span>
+                            <span className="font-semibold">
+                              {tourDetails.coming_start_schedule} ✈{" "}
+                              {tourDetails.coming_end_schedule}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  {/* Number of Rooms */}
-                  <div className="border border-brand-sand rounded-xl">
-                    <div className="bg-teal-800 text-white px-4 py-2 font-semibold rounded-t-xl">
-                      NUMBER OF ROOMS
-                    </div>
-
-                    <div className="p-4 space-y-4">
-                      <div>
-                        <label className="block text-sm text-gray-800 font-semibold mb-1">
-                          Select number of rooms, total 8 pax allowed per booking
-                        </label>
-                        <input
-                          type="number"
-                          className="w-50 border border-gray-300 bg-gray-100 rounded px-3 py-1.5 mt-1 shadow text-sm"
-                        />
-                      </div>
-
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 text-xs font-semibold text-gray-900">
-                        <strong>NOTE:</strong> As a licensing condition of the Singapore
-                        Tourism Board, Commonwealth Travel Service Corporation Pte Ltd
-                        are required to inform you, the Client, to consider purchasing
-                        travel insurance.
-                        <br />
-                        <br />
-                        Get a comprehensive travel insurance policy to protect against
-                        unforeseen circumstances, such as baggage loss, flight delays,
-                        travel agent insolvency and medical emergencies.
-                      </div>
-                    </div>
-                  </div>
+                
 
                   {/* Room 1 */}
                   <div className="border border-brand-sand rounded-xl">
                     <div className="bg-teal-800 text-white px-4 py-2 font-semibold rounded-t-xl">
-                      ROOM 1
+                      ROOM Booking
                     </div>
 
                     <div className="px-4 pt-4 pb-6 grid grid-cols-1 md:grid-cols-5 gap-4 font-semibold">
                       <div>
                         <label className="text-sm text-gray-900">Adult</label>
-                        <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
-                          <option>0</option>
-                          <option>1</option>
-                          <option>2</option>
+                        <select
+                          className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm"
+                          value={adultCount}
+                          onChange={(e) =>
+                            setAdultCount(Number(e.target.value))
+                          }
+                        >
+                          {[...Array(10)].map((_, i) => (
+                            <option key={i} value={i}>
+                              {i}
+                            </option>
+                          ))}
                         </select>
+                        <p className="text-xs text-gray-500 mt-1">
+                          x ${adultFare} = $
+                          {(adultCount * adultFare).toFixed(2)}
+                        </p>
                       </div>
 
                       <div>
-                        <label className="text-sm text-gray-900">Child w/ Bed</label>
-                        <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
-                          <option>0</option>
-                          <option>1</option>
+                        <label className="text-sm text-gray-900">Child</label>
+                        <select
+                          className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm"
+                          value={childCount}
+                          onChange={(e) =>
+                            setChildCount(Number(e.target.value))
+                          }
+                        >
+                          {[...Array(10)].map((_, i) => (
+                            <option key={i} value={i}>
+                              {i}
+                            </option>
+                          ))}
                         </select>
+                        <p className="text-xs text-gray-500 mt-1">
+                          x ${childFare} = $
+                          {(childCount * childFare).toFixed(2)}
+                        </p>
                       </div>
 
                       <div>
-                        <label className="text-sm text-gray-900">Child w/o Bed</label>
-                        <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
-                          <option>0</option>
-                          <option>1</option>
+                        <label className="text-sm text-gray-900">
+                          Single Bed Count
+                        </label>
+                        <select
+                          className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm"
+                          value={singleBedCount}
+                          onChange={(e) =>
+                            setSingleBedCount(Number(e.target.value))
+                          }
+                        >
+                          {[...Array(6)].map((_, i) => (
+                            <option key={i} value={i}>
+                              {i}
+                            </option>
+                          ))}
                         </select>
+                        <p className="text-xs text-gray-500 mt-1">
+                          x ${singleBedFare} = $
+                          {(singleBedCount * singleBedFare).toFixed(2)}
+                        </p>
                       </div>
 
                       <div>
-                        <label className="text-sm text-gray-900">Infants</label>
-                        <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
-                          <option>0</option>
-                          <option>1</option>
+                        <label className="text-sm text-gray-900">
+                          Twin Bed Count
+                        </label>
+                        <select
+                          className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm"
+                          value={twinBedCount}
+                          onChange={(e) =>
+                            setTwinBedCount(Number(e.target.value))
+                          }
+                        >
+                          {[...Array(6)].map((_, i) => (
+                            <option key={i} value={i}>
+                              {i}
+                            </option>
+                          ))}
                         </select>
+                        <p className="text-xs text-gray-500 mt-1">
+                          x ${twinBedFare} = $
+                          {(twinBedCount * twinBedFare).toFixed(2)}
+                        </p>
                       </div>
 
                       <div>
-                        <label className="text-sm text-gray-900">Room Type</label>
-                        <select className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm">
-                          <option>Twin Bed</option>
-                          <option>Double Bed</option>
+                        <label className="text-sm text-gray-900">
+                          Tripple Bed Count
+                        </label>
+                        <select
+                          className="w-full border border-brand-sand rounded-lg bg-gray-100  px-2 py-2 shadow text-sm"
+                          value={tripleBedCount}
+                          onChange={(e) =>
+                            setTripleBedCount(Number(e.target.value))
+                          }
+                        >
+                          {[...Array(6)].map((_, i) => (
+                            <option key={i} value={i}>
+                              {i}
+                            </option>
+                          ))}
                         </select>
+                        <p className="text-xs text-gray-500 mt-1">
+                          x ${tripleBedFare} = $
+                          {(tripleBedCount * tripleBedFare).toFixed(2)}
+                        </p>
                       </div>
+                    </div>
+
+                    {/* Total Price Display */}
+                    <div className="bg-brand-green/10 border-t border-brand-sand p-4 flex justify-between items-center">
+                      <span className="font-bold text-teal-800">
+                        TOTAL ESTIMATED PRICE
+                      </span>
+                      <span className="text-2xl font-bold text-teal-900">
+                        ${totalPrice.toLocaleString()}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -455,7 +611,7 @@ export default function MakeBooking() {
 
             {step === 1 && (
               <>
-                {/* ✅ PASSENGER DETAILS content: তুমি এখানে বসাবে */}
+                {/* ✅ PASSENGER DETAILS content*/}
                 <div className="col-span-12 lg:col-span-8 space-y-6 ">
                   {/* Tour Details */}
                   <div className="border border-brand-sand rounded-xl shadow-lg">
@@ -464,43 +620,61 @@ export default function MakeBooking() {
                     </div>
 
                     <div className="p-4 space-y-2">
-                      <h3 className="font-bold text-black">
-                        7D NEW MT. LU/MT. DAJUE + WUYUAN
-                      </h3>
+                      {/* <h3 className="font-bold text-black">
+                        {tourDetails.title}
+                      </h3> */}
 
-                      <div className="grid grid-cols-2 gap-4 text-gray-600 pt-3">
-                        <div>
-                          <p className="font-medium text-sm text-gray-500">DEPARTURE DATE</p>
-                          <p className="font-semibold text-black">
-                            Wed, 18 Feb 2026 ✈
-                          </p>
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-bold text-teal-800">
+                            DEPARTURE
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {tourDetails.going_date}
+                          </span>
                         </div>
-
-                        <div>
-                          <p className="font-medium text-sm text-gray-500">RETURN DATE</p>
-                          <p className="font-semibold text-black">
-                            Tue, 24 Feb 2026
-                          </p>
+                        <div className="flex justify-between items-center text-sm">
+                          <span>{tourDetails.going_flight}</span>
+                          <span className="font-semibold">
+                            {tourDetails.going_start_schedule} ✈{" "}
+                            {tourDetails.going_end_schedule}
+                          </span>
                         </div>
+                      </div>
 
-                        <div>
-                          <p className="font-medium text-sm text-gray-500 pt-3">TOUR CODE</p>
-                          <p className="font-semibold text-black">
-                            02CKH1D 18/26MU
-                          </p>
+                      {/* Coming Flight */}
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-bold text-teal-800">
+                            RETURN
+                          </span>
+                          {/* <span className="text-xs text-gray-500">{tourDetails.coming_date}</span> */}
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span>{tourDetails.coming_flight}</span>
+                          <span className="font-semibold">
+                            {tourDetails.coming_start_schedule} ✈{" "}
+                            {tourDetails.coming_end_schedule}
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    <hr className='my-2 mx-8 text-brand-sand' />
+                    <hr className="my-2 mx-8 text-brand-sand" />
 
                     {/* react hook form start */}
 
-                    <form id="bookingForm" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    <form
+                      id="bookingForm"
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="space-y-6"
+                    >
                       {/* PRIMARY CONTACT */}
                       <div className={cardClass}>
                         <div className="px-5 pt-5">
-                          <p className='text-brand-coral font-bold tracking-wide text-lg'>Primary Contact</p>
+                          <p className="text-brand-coral font-bold tracking-wide text-lg">
+                            Primary Contact
+                          </p>
                         </div>
 
                         <div className="p-5">
@@ -555,7 +729,7 @@ export default function MakeBooking() {
                           </div>
                         </div>
                       </div>
-                      <hr className='my-2 mx-8 text-brand-sand' />
+                      <hr className="my-2 mx-8 text-brand-sand" />
 
                       {/* TRAVELLERS */}
                       {fields.map((t, idx) => {
@@ -563,7 +737,10 @@ export default function MakeBooking() {
                         return (
                           <div key={t.id} className={cardClass}>
                             <div className="px-5 pt-5">
-                              <SectionTitle title={`TRAVELLER ${idx + 1} - ADULT`} color="text-teal-700" />
+                              <SectionTitle
+                                title={`TRAVELLER ${idx + 1} - ${idx < adultCount ? "ADULT" : "CHILD"}`}
+                                color="text-teal-700"
+                              />
                             </div>
 
                             <div className="p-5">
@@ -571,7 +748,6 @@ export default function MakeBooking() {
                                 <Field label="Name" error={e?.name?.message}>
                                   <input
                                     className={inputClass}
-
                                     {...register(`travellers.${idx}.name`)}
                                   />
                                 </Field>
@@ -584,74 +760,79 @@ export default function MakeBooking() {
                                   />
                                 </Field>
 
-                                <Field label="Mobile" error={e?.mobile?.message}>
+                                <Field
+                                  label="Mobile"
+                                  error={e?.mobile?.message}
+                                >
                                   <input
                                     className={inputClass}
                                     {...register(`travellers.${idx}.mobile`)}
                                   />
                                 </Field>
 
-                                <Field label="Nationality" error={e?.nationality?.message}>
+                                <Field
+                                  label="Nationality"
+                                  error={e?.nationality?.message}
+                                >
                                   <input
                                     className={inputClass}
-                                    {...register(`travellers.${idx}.nationality`)}
+                                    {...register(
+                                      `travellers.${idx}.nationality`,
+                                    )}
                                   />
                                 </Field>
 
-                                <Field label="Date of Birth" error={e?.dateOfBirth?.message}>
+                                <Field
+                                  label="Date of Birth"
+                                  error={e?.dateOfBirth?.message}
+                                >
                                   <input
                                     className={inputClass}
                                     type="date"
-                                    {...register(`travellers.${idx}.dateOfBirth`)}
+                                    {...register(
+                                      `travellers.${idx}.dateOfBirth`,
+                                    )}
                                   />
                                 </Field>
 
-                                <Field label="Passport No." error={e?.passportNo?.message}>
+                                <Field
+                                  label="Passport No."
+                                  error={e?.passportNo?.message}
+                                >
                                   <input
                                     className={inputClass}
-                                    {...register(`travellers.${idx}.passportNo`)}
+                                    {...register(
+                                      `travellers.${idx}.passportNo`,
+                                    )}
                                   />
                                 </Field>
 
                                 <div className="">
-                                  <Field label="Expiry Date" error={e?.expiryDate?.message}>
+                                  <Field
+                                    label="Expiry Date"
+                                    error={e?.expiryDate?.message}
+                                  >
                                     <input
                                       className={inputClass}
                                       type="date"
-                                      {...register(`travellers.${idx}.expiryDate`)}
+                                      {...register(
+                                        `travellers.${idx}.expiryDate`,
+                                      )}
                                     />
                                   </Field>
                                 </div>
                               </div>
 
-                              {idx === 0 ? <hr className="my-5 border-slate-200" /> : null}
+                              {idx === 0 ? (
+                                <hr className="my-5 border-slate-200" />
+                              ) : null}
                             </div>
                           </div>
                         );
                       })}
 
-                      {/* ACTIONS */}
-                      {/* <div className="flex items-center justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={() => reset()}
-                    className="h-10 rounded-md border border-slate-200 bg-white px-4 text-sm hover:bg-slate-50"
-                  >
-                    Reset
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="h-10 rounded-md bg-slate-900 px-5 text-sm text-white hover:bg-slate-800 disabled:opacity-60"
-                  >
-                    Continue
-                  </button>
-                </div> */}
+                  
                     </form>
-
-
-
                   </div>
                   <div>
                     {/* DISCOUNT + REFERRED STAFF */}
@@ -659,14 +840,18 @@ export default function MakeBooking() {
                       <div className="p-5">
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_140px] md:items-end">
                           <div className="space-y-1">
-                            <label className="text-sm font-medium text-slate-700">Discount Code (if any)</label>
+                            <label className="text-sm font-medium text-slate-700">
+                              Discount Code (if any)
+                            </label>
                             <input
                               className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-slate-400"
                               placeholder="Enter discount code"
                               {...register("discountCode")}
                             />
                             {errors.discountCode?.message ? (
-                              <p className="text-xs text-red-600">{String(errors.discountCode.message)}</p>
+                              <p className="text-xs text-red-600">
+                                {String(errors.discountCode.message)}
+                              </p>
                             ) : null}
                           </div>
 
@@ -674,8 +859,9 @@ export default function MakeBooking() {
                             type="button"
                             className="h-10 rounded-md bg-brand-coral/90 px-5 text-sm font-bold tracking-wider text-md text-white hover:bg-brand-coral duration-300"
                             onClick={() => {
-                              const code = form.getValues("discountCode")?.trim();
-                              // ✅ এখানে তোমার apply coupon logic / API call দাও
+                              const code = form
+                                .getValues("discountCode")
+                                ?.trim();
                               console.log("APPLY COUPON:", code);
                             }}
                           >
@@ -684,14 +870,18 @@ export default function MakeBooking() {
                         </div>
 
                         <div className="mt-4 space-y-1">
-                          <label className="text-sm font-medium text-slate-700">Referred Sales Staff Name</label>
+                          <label className="text-sm font-medium text-slate-700">
+                            Referred Sales Staff Name
+                          </label>
                           <input
                             className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-slate-400"
                             placeholder="Enter staff name"
                             {...register("referredSalesStaffName")}
                           />
                           {errors.referredSalesStaffName?.message ? (
-                            <p className="text-xs text-red-600">{String(errors.referredSalesStaffName.message)}</p>
+                            <p className="text-xs text-red-600">
+                              {String(errors.referredSalesStaffName.message)}
+                            </p>
                           ) : null}
                         </div>
                       </div>
@@ -705,26 +895,44 @@ export default function MakeBooking() {
                             i
                           </div>
                           <div className="w-full">
-                            <h4 className="font-semibold text-slate-800">Important Note</h4>
+                            <h4 className="font-semibold text-slate-800">
+                              Important Note
+                            </h4>
 
                             <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
-                              <li>All travellers are expected to be at the correct travel on return date of the tour.</li>
-                              <li>Traveller names should be entered exactly as how they appear on passports.</li>
-                              <li>All passports must be valid for another 6 months before tour departure.</li>
                               <li>
-                                All tours are subject to confirmation, based on minimum group size to depart, usually 2 to 3
+                                All travellers are expected to be at the correct
+                                travel on return date of the tour.
+                              </li>
+                              <li>
+                                Traveller names should be entered exactly as how
+                                they appear on passports.
+                              </li>
+                              <li>
+                                All passports must be valid for another 6 months
+                                before tour departure.
+                              </li>
+                              <li>
+                                All tours are subject to confirmation, based on
+                                minimum group size to depart, usually 2 to 3
                                 weeks before departure.
                               </li>
-                              <li>Tour itinerary and fuel surcharges are subject to changes till all tickets are issued.</li>
                               <li>
-                                Tour prices do not include travel charges. Travellers must ensure they hold a valid travel
+                                Tour itinerary and fuel surcharges are subject
+                                to changes till all tickets are issued.
+                              </li>
+                              <li>
+                                Tour prices do not include travel charges.
+                                Travellers must ensure they hold a valid travel
                                 visa to enter their destination country(ies).
                               </li>
                               <li>
-                                Tour prices include gratuities for tour leader or manager, onewere guide and driver, if any.
+                                Tour prices include gratuities for tour leader
+                                or manager, onewere guide and driver, if any.
                               </li>
                               <li>
-                                Administrative fee may be chargeable for any special request or additional service.
+                                Administrative fee may be chargeable for any
+                                special request or additional service.
                               </li>
                             </ul>
 
@@ -737,13 +945,19 @@ export default function MakeBooking() {
                                 />
                                 <span>
                                   I understand and accept{" "}
-                                  <a className="text-rose-600 hover:underline" href="/terms" target="_blank">
+                                  <a
+                                    className="text-rose-600 hover:underline"
+                                    href="/terms"
+                                    target="_blank"
+                                  >
                                     CTC's terms and conditions
                                   </a>
                                 </span>
                               </label>
                               {errors.termsAccepted?.message ? (
-                                <p className="text-xs text-red-600">{String(errors.termsAccepted.message)}</p>
+                                <p className="text-xs text-red-600">
+                                  {String(errors.termsAccepted.message)}
+                                </p>
                               ) : null}
 
                               <label className="flex cursor-pointer items-start gap-2 text-sm text-slate-700">
@@ -754,20 +968,25 @@ export default function MakeBooking() {
                                 />
                                 <span>
                                   By submitting, I agree to{" "}
-                                  <a className="text-rose-600 hover:underline" href="/privacy" target="_blank">
+                                  <a
+                                    className="text-rose-600 hover:underline"
+                                    href="/privacy"
+                                    target="_blank"
+                                  >
                                     CTC's privacy policy
                                   </a>
                                 </span>
                               </label>
                               {errors.privacyAccepted?.message ? (
-                                <p className="text-xs text-red-600">{String(errors.privacyAccepted.message)}</p>
+                                <p className="text-xs text-red-600">
+                                  {String(errors.privacyAccepted.message)}
+                                </p>
                               ) : null}
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </>
@@ -775,11 +994,49 @@ export default function MakeBooking() {
 
             {step === 2 && (
               <>
-                {/* ✅ REVIEW & PAYMENT content: তুমি এখানে বসাবে */}
-                <ReviewBookingStep
-                  form={form}
-                  onEdit={() => setStep(1)}
-                />
+                {/* ✅ REVIEW & PAYMENT content */}
+                <div className="space-y-6">
+                  {/* Reuse ReviewBookingStep or simple display */}
+                  {bookingResponse ? (
+                    <div className="bg-white border border-brand-sand rounded-xl p-6 shadow-md">
+                      <h3 className="text-xl font-bold text-teal-800 mb-4">
+                        Booking Review
+                      </h3>
+                      <p>
+                        <strong>Booking ID:</strong> {bookingResponse.id}
+                      </p>
+                      <p>
+                        <strong>Status:</strong>{" "}
+                        {bookingResponse.booking_status}
+                      </p>
+                      <hr className="my-4" />
+                      <p>
+                        <strong>Primary Contact:</strong>{" "}
+                        {bookingResponse.primary_name}
+                      </p>
+                      <p>
+                        <strong>Email:</strong> {bookingResponse.primary_email}
+                      </p>
+                      <p>
+                        <strong>Mobile:</strong>{" "}
+                        {bookingResponse.primary_mobile}
+                      </p>
+
+                      <div className="mt-4">
+                        <h4 className="font-semibold text-gray-700">
+                          Price Breakdown
+                        </h4>
+                        <p>Total: ${bookingResponse.booking_total_price}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <ReviewBookingStep
+                      form={form}
+                      adultCount={adultCount}
+                      onEdit={() => setStep(1)}
+                    />
+                  )}
+                </div>
               </>
             )}
           </div>
@@ -792,74 +1049,102 @@ export default function MakeBooking() {
               </div>
 
               <div className="p-4 space-y-2">
-                <SummaryRow label="Adult (Twin)" price="$2,568" qty={2} total="$4,236" />
+                <SummaryRow
+                  label="Adult"
+                  price={`$${adultFare}`}
+                  qty={adultCount}
+                  total={`$${(adultCount * adultFare).toFixed(2)}`}
+                />
 
-                <div className="border-t border-brand-sand my-2" />
+                {childCount > 0 && (
+                  <SummaryRow
+                    label="Child"
+                    price={`$${childFare}`}
+                    qty={childCount}
+                    total={`$${(childCount * childFare).toFixed(2)}`}
+                  />
+                )}
 
-                <SummaryRow label="Taxes" price="$100" qty={2} total="$200" />
+                {singleBedCount > 0 && (
+                  <SummaryRow
+                    label="Single Bed"
+                    price={`$${singleBedFare}`}
+                    qty={singleBedCount}
+                    total={`$${(singleBedCount * singleBedFare).toFixed(2)}`}
+                  />
+                )}
+
+                {twinBedCount > 0 && (
+                  <SummaryRow
+                    label="Twin Bed"
+                    price={`$${twinBedFare}`}
+                    qty={twinBedCount}
+                    total={`$${(twinBedCount * twinBedFare).toFixed(2)}`}
+                  />
+                )}
+
+                {tripleBedCount > 0 && (
+                  <SummaryRow
+                    label="Triple Bed"
+                    price={`$${tripleBedFare}`}
+                    qty={tripleBedCount}
+                    total={`$${(tripleBedCount * tripleBedFare).toFixed(2)}`}
+                  />
+                )}
 
                 <div className="border-t border-brand-sand my-2" />
 
                 <SummaryRow
-                  label="CRKHOLDING 13"
-                  price="($820)"
-                  qty={2}
-                  total="($1,000)"
-                  negative
+                  label="Taxes"
+                  price={`$${taxFare}`}
+                  qty={totalPax}
+                  total={`$${totalTax.toFixed(2)}`}
                 />
 
                 <div className="border-t border-brand-sand my-2" />
 
                 <div className="flex justify-between font-semibold">
                   <span className="text-black font-bold">Total SGD</span>
-                  <span className="text-teal-700">$3,495</span>
+                  <span className="text-teal-700">
+                    ${totalPrice.toLocaleString()}
+                  </span>
                 </div>
 
                 {step === 1 && (
                   <>
-                    {/* ✅ REVIEW & PAYMENT content: তুমি এখানে বসাবে */}
                     <CheckoutCountdown
                       expiresAt={Date.now() + 35 * 60 * 1000}
-                      onExpire={() => console.log("Expired")} 
+                      onExpire={() => console.log("Expired")}
                     />
                   </>
                 )}
                 {step === 2 && (
                   <>
-                    {/* ✅ REVIEW & PAYMENT content: তুমি এখানে বসাবে */}
                     <CheckoutCountdown
                       expiresAt={Date.now() + 35 * 60 * 1000}
-                      onExpire={() => console.log("Expired")} 
+                      onExpire={() => console.log("Expired")}
                     />
                   </>
                 )}
-                {/* ✅ One button controls step + last navigates */}
+
                 <button
-                  onClick={() => {
-                    if (step === 1) {
-                      // Submit form for validation on step 1
-                      const form = document.getElementById("bookingForm") as HTMLFormElement;
-                      if (form) form.requestSubmit();
-                    } else {
-                      handleNext();
-                    }
-                  }}
-                  className="w-full mt-4 bg-brand-coral/90 hover:bg-brand-coral text-white py-2 rounded-md duration-300 font-bold tracking-wide"
+                  onClick={handleNext}
+                  className="w-full mt-4 bg-brand-coral/90 hover:bg-brand-coral cursor-pointer text-white py-2 rounded-md duration-300 font-bold tracking-wide"
                 >
                   {nextLabel}
                 </button>
 
-                {/* Optional: Back button (if you want) */}
-                {/* 
+                {/* Optional: Back button */}
                 {step > 0 && (
                   <button
-                    onClick={() => setStep((prev) => (prev === 2 ? 1 : 0))}
+                    onClick={() =>
+                      setStep((prev) => (prev === 2 ? 1 : 0) as StepKey)
+                    }
                     className="w-full mt-2 border border-gray-300 text-gray-700 py-2 rounded duration-300 font-bold tracking-wide"
                   >
                     BACK
                   </button>
-                )} 
-                */}
+                )}
               </div>
             </div>
           </div>

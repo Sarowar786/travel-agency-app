@@ -1,22 +1,20 @@
 'use client'
-import { useRouter } from 'next/navigation'
+
 import PackageDetails from '@/components/Destinations/PackageDetails'
+import { use } from 'react'
 
-export default function PackageDetailsPage() {
-  const router = useRouter()
+export default function PackageDetailsPage({
+  params,
+}: {
+ params: Promise<{ id: string }>
+}) {
+  const {id} = use(params)
 
-  const handleNavigateBack = () => {
-    router.push('/destinations')
-  }
-
-  const handleNavigateBooking = () => {
-    router.push('/booking')
-  }
 
   return (
     <PackageDetails 
-      onNavigateBack={handleNavigateBack} 
-      onNavigateBooking={handleNavigateBooking} 
+      id= {id}
+    
     />
   )
 }

@@ -4,14 +4,7 @@ import {
   ArrowLeft,
   ChevronDown,
   ChevronUp,
-  Car,
-  Hotel,
-  Train,
-  Moon,
   Camera,
-  Utensils,
-  Coffee,
-  Ship,
   Users,
   Zap,
   Calendar,
@@ -25,20 +18,21 @@ import {
   Mail,
   Link,
 } from "lucide-react";
-import { ActivityOption, DayItinerary, ActivitySlot } from "../../../types";
+import {  DayItinerary, ActivitySlot } from "../../../types";
 import ActivityCustomizationModal from "./ActivityCustomizationModal";
-import { ALL_PACKAGES } from "../../components/UI/constants";
-import TripCard from "../UI/TripCard";
+
 import { useGetSingleDestinationQuery } from "@/redux/api/destinationApi";
+import { useRouter } from "next/navigation";
 // import { NavLink } from 'react-router-dom';
 
 interface PackageDetailsProps {
-  onNavigateBack: () => void;
+ 
+  
 }
 
-// --- DATA ---
 
-const BASE_PRICE = 880;
+
+
 
 // --- ACCORDION COMPONENT ---
 const AccordionItem = ({
@@ -95,6 +89,8 @@ interface ApiDestination {
   style: string;
   min_pax: string;
   image: string;
+  current_price: number;
+  country:string;
 }
 
 interface ApiCustomizeItem {
@@ -125,8 +121,6 @@ interface ApiItinerary {
 }
 
 interface PackageDetailsProps {
-  onNavigateBack: () => void;
-  onNavigateBooking: () => void;
   id: string;
 }
 
@@ -175,14 +169,14 @@ const transformApiItinerariesToDayItineraries = (
 
 const PackageDetails: React.FC<PackageDetailsProps> = ({
   id,
-  onNavigateBack,
-  onNavigateBooking,
+  
 }) => {
   const [expandedDay, setExpandedDay] = useState<number | null>(1);
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [editingSlotId, setEditingSlotId] = useState<string | null>(null);
   const [isBookingDrawerOpen, setIsBookingDrawerOpen] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const router = useRouter()
 
   // api calling
   const {
@@ -194,7 +188,7 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
   });
   const apiItineraries = (trip?.data?.itineraries ?? []) as ApiItinerary[];
   const destination = apiItineraries?.[0]?.destination;
-
+  const price = destination?.current_price;
   // Transform API data to component format
   const transformedItineraries = useMemo(
     () => transformApiItinerariesToDayItineraries(apiItineraries),
@@ -202,17 +196,6 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
   );
 
   // Initialize selections for customizable items
-  // useMemo(() => {
-  //   const newSelections: Record<string, string> = {};
-  //   transformedItineraries.forEach((day) => {
-  //     day.slots.forEach((slot) => {
-  //       if (slot.changeable && slot.defaultActivityId) {
-  //         newSelections[slot.id] = slot.defaultActivityId;
-  //       }
-  //     });
-  //   });
-  //   setSelections(newSelections);
-  // }, [transformedItineraries]);
 
   useEffect(() => {
     if (transformedItineraries.length > 0 && !initialized) {
@@ -232,7 +215,7 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
   // --- CALCULATIONS ---
 
   const totalPrice = useMemo(() => {
-    let total = BASE_PRICE;
+    let total = price;
     transformedItineraries.forEach((day) => {
       day.slots.forEach((slot) => {
         if (slot.changeable && slot.options) {
@@ -247,7 +230,7 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
     return total;
   }, [selections, transformedItineraries]);
 
-  
+
 
   if (!destination) {
     return (
@@ -257,12 +240,7 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
     );
   }
 
-  // const relatedTrips = useMemo(() => {
-  //   // Exclude current package ID '1' (Chongqing)
-  //   const others = ALL_PACKAGES.filter((p) => p.id !== "1");
-  //   // Simple shuffle
-  //   return others.sort(() => 0.5 - Math.random()).slice(0, 3);
-  // }, []);
+
 
   const handleConfirmSelection = (slotId: string, optionId: string) => {
     setSelections((prev) => ({ ...prev, [slotId]: optionId }));
@@ -307,7 +285,7 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
       <div className="flex flex-col gap-3">
         {/* 1. Book This Escape */}
         <button
-          onClick={onNavigateBooking}
+          onClick={()=>router.push(`/booking?tripId=${id}&country=${destination.country}`)}
           className="w-full py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-2 transition-all duration-300 bg-brand-green text-brand-navy hover:bg-[#8cc72b] hover:scale-[1.02]"
         >
           Book This Escape
@@ -361,7 +339,7 @@ const PackageDetails: React.FC<PackageDetailsProps> = ({
         {/* Nav */}
         <div className="relative z-20 px-6 md:px-8 pt-24 md:pt-28">
           <button
-            onClick={onNavigateBack}
+            onClick={()=>router.push('/destinations')}
             className="flex items-center gap-2 text-white hover:text-brand-green transition-colors bg-black/20 backdrop-blur-md px-4 py-2 rounded-full font-medium"
           >
             <ArrowLeft size={18} /> Back

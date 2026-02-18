@@ -1,15 +1,15 @@
-'use client'
-import { useRouter } from 'next/navigation'
-import Booking from '@/components/Booking/Booking'
+"use client";
+
+import Booking from "@/components/Booking/Booking";
+import { useSearchParams } from "next/navigation";
 
 export default function BookingPage() {
-  const router = useRouter()
+  const searchParams = useSearchParams();
+  console.log("search params", searchParams);
+  const country = searchParams.get("country");
+  const tripId = Number( searchParams.get("tripId"));
+  console.log("county  ", country);
+  console.log("tripid  ", tripId);
 
-  const handleNavigateMakeBooking = () => {
-    router.push('/make-booking')
-  }
-
-  return (
-    <Booking onNavigateMakeBooking={handleNavigateMakeBooking} />
-  )
+  return <Booking country={country?? ''} id={tripId} />;
 }
