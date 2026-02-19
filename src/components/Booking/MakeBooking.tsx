@@ -252,7 +252,12 @@ export default function MakeBooking() {
     getTourBookingFirstStep,
     { data: tourBookingFirstStepData, isLoading },
   ] = useGetTourBookingFirstStepMutation();
-
+  console.log("tourBookingFirstStepData", tourBookingFirstStepData);
+  const client_secret = tourBookingFirstStepData?.data?.client_secret;
+  const payment_intent_id = tourBookingFirstStepData?.data?.payment_intent_id;
+  // console.log("client secret ", client_secret);
+  // console.log("payment secret ", payment_intent_id);
+  
   const handleNext = async () => {
     if (step === 0) {
       // ✅ Step 0 Validation: adultCount must be at least 1
@@ -404,10 +409,23 @@ export default function MakeBooking() {
       console.log(res, "booking response");
       if (res?.status === "success") {
         setBookingResponse(res.data);
-        // Navigate to checkout with booking ID
-        router.push(
-          `/checkout?booking_id=${tourDetails.destination_id}&destination_id=${tourDetails.destination_id}`,
-        );
+
+        // Extract Stripe payment info from API response
+        const clientSecret = res.data?.client_secret;
+        const paymentIntentId = res.data?.payment_intent_id;
+        const bookingId = res.data?.booking_id || booking;
+        const amount = res.data?.amount || totalPrice;
+
+        // Navigate to checkout with all required payment params
+        const params = new URLSearchParams({
+          client_secret: clientSecret || "",
+          payment_intent_id: paymentIntentId || "",
+          booking_id: String(bookingId || ""),
+          amount: String(amount || ""),
+          destination_id: tourDetails.destination_id || "",
+        });
+
+        router.push(`/checkout?${params.toString()}`);
       }
     } catch (err) {
       console.error("Booking Error:", err);

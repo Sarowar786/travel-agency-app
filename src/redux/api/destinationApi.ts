@@ -34,6 +34,14 @@ export const destinationApi = baseApi.injectEndpoints({
         invalidatesTags: ["Destinations"],
       }),
     }),
+    // getTourBookingSecondStep: builder.mutation({
+    //   query: (params) => ({
+    //     url: `/bookings/payments/create-tour-intent/`,
+    //     method: "POST",
+    //     body: { ...params },
+    //     invalidatesTags: ["Destinations"],
+    //   }),
+    // }),
   }),
 });
 
@@ -42,4 +50,5 @@ export const {
   useGetSingleDestinationQuery,
   useGetBookingFirstViewQuery,
   useGetTourBookingFirstStepMutation,
+  // useGetTourBookingSecondStepMutation,
 } = destinationApi;
