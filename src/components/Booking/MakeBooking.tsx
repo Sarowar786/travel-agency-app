@@ -209,7 +209,7 @@ export default function MakeBooking() {
   const tripleBedFare = Number(searchParams.get("triple_bed_price")) || 0;
   const taxFare = Number(searchParams.get("tax_fare")) || 0;
   const booking = searchParams.get("booking");
-  console.log('booking id sdfsaidfhsdf', booking)
+  console.log("booking id sdfsaidfhsdf", booking);
 
   // Flight Details
   const departureDate = searchParams.get("going_date") || "N/A";
@@ -235,6 +235,7 @@ export default function MakeBooking() {
   const [twinBedCount, setTwinBedCount] = useState(0);
   const [tripleBedCount, setTripleBedCount] = useState(0);
   const [bookingResponse, setBookingResponse] = useState<any>(null);
+  const [step0Error, setStep0Error] = useState<string>("");
 
   const totalPax = adultCount + childCount;
   const subTotal =
@@ -254,15 +255,19 @@ export default function MakeBooking() {
 
   const handleNext = async () => {
     if (step === 0) {
+      // ✅ Step 0 Validation: adultCount must be at least 1
+      if (adultCount < 1) {
+        setStep0Error("You must select at least one adult.");
+        return;
+      }
+      setStep0Error("");
+
       // Sync travellers array size with totalPax
       const currentTravellers = form.getValues("travellers");
       if (currentTravellers.length !== totalPax) {
-        // Create new array based on current travellers or empty defaults
         const newTravellers = [...currentTravellers];
-        console.log("newTravellers", newTravellers);
 
         if (newTravellers.length < totalPax) {
-          // Add missing travellers
           for (let i = newTravellers.length; i < totalPax; i++) {
             newTravellers.push({
               name: "",
@@ -275,18 +280,48 @@ export default function MakeBooking() {
             });
           }
         } else if (newTravellers.length > totalPax) {
-          // Remove extra travellers
           newTravellers.length = totalPax;
         }
 
-        // Update form value
         form.setValue("travellers", newTravellers);
       }
       return setStep(1);
     }
-    if (step === 1) return setStep(2);
+
+    if (step === 1) {
+      // ✅ Step 1 Validation: validate primaryContact + all travellers fields
+      const travellerFields = fields.flatMap((_, idx) => [
+        `travellers.${idx}.name` as const,
+        `travellers.${idx}.email` as const,
+        `travellers.${idx}.mobile` as const,
+        `travellers.${idx}.nationality` as const,
+        `travellers.${idx}.dateOfBirth` as const,
+        `travellers.${idx}.passportNo` as const,
+        `travellers.${idx}.expiryDate` as const,
+      ]);
+
+      const isValid = await form.trigger([
+        "primaryContact.name",
+        "primaryContact.email",
+        "primaryContact.mobile",
+        "primaryContact.address",
+        ...travellerFields,
+      ]);
+
+      if (!isValid) {
+        // Scroll to first error
+        const firstError = document.querySelector(".text-red-600");
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return; // Stay on Step 1, errors will be shown inline
+      }
+
+      return setStep(2);
+    }
+
     if (step === 2) {
-      // On the review step, submit the form to create the booking
+      // On the review step, submit the form
       const formValues = form.getValues();
       await onSubmit(formValues);
     }
@@ -348,7 +383,7 @@ export default function MakeBooking() {
       twin_bed_count: twinBedCount,
       triple_bed_count: tripleBedCount,
       tax_price: taxFare,
-      booking_total_price:totalPrice,
+      booking_total_price: totalPrice,
       travellers: values.travellers,
       primary_name: values.primaryContact.name,
       primary_email: values.primaryContact.email,
@@ -474,7 +509,6 @@ export default function MakeBooking() {
                       </div>
                     </div>
                   </div>
-                
 
                   {/* Room 1 */}
                   <div className="border border-brand-sand rounded-xl">
@@ -604,6 +638,16 @@ export default function MakeBooking() {
                         ${totalPrice.toLocaleString()}
                       </span>
                     </div>
+
+                    {/* ✅ Step 0 Validation Error */}
+                    {step0Error && (
+                      <div className="mx-4 mb-4 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+                        <span className="text-red-500 text-lg">⚠️</span>
+                        <p className="text-sm font-medium text-red-600">
+                          {step0Error}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </>
@@ -830,8 +874,6 @@ export default function MakeBooking() {
                           </div>
                         );
                       })}
-
-                  
                     </form>
                   </div>
                   <div>
