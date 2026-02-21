@@ -41,12 +41,10 @@ export const CheckoutForm = () => {
         return;
       }
 
-
-
       // Confirm payment with Stripe
       const { error } = await stripe.confirmPayment({
         elements,
-        clientSecret:clientSecret!,
+        clientSecret:clientSecret!,       
         confirmParams: {
           return_url: `${window.location.origin}/checkout/success`,
         },
@@ -70,12 +68,6 @@ export const CheckoutForm = () => {
       <div className="bg-white p-6 rounded-lg border border-gray-200">
         <PaymentElement />
       </div>
-
-      {/* {errorMessage && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded text-red-600 text-sm">
-          {errorMessage}
-        </div>
-      )} */}
 
       <button
         type="submit"

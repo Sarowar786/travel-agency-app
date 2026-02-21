@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -255,8 +254,7 @@ export default function MakeBooking() {
   console.log("tourBookingFirstStepData", tourBookingFirstStepData);
   const client_secret = tourBookingFirstStepData?.data?.client_secret;
   const payment_intent_id = tourBookingFirstStepData?.data?.payment_intent_id;
-  // console.log("client secret ", client_secret);
-  // console.log("payment secret ", payment_intent_id);
+
   
   const handleNext = async () => {
     if (step === 0) {
@@ -425,7 +423,7 @@ export default function MakeBooking() {
           destination_id: tourDetails.destination_id || "",
         });
 
-        router.push(`/checkout?${params.toString()}`);
+        router.push(`/checkout?client_secret=${encodeURIComponent(clientSecret)}&${params.toString()}`);
       }
     } catch (err) {
       console.error("Booking Error:", err);
