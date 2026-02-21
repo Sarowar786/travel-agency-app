@@ -111,7 +111,11 @@ const Navbar = () => {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           {/* <img src={logo} alt="Long Vacation Logo" /> */}
-          <Image src={pathname === "/contact" ? logoRounded : scrolled? logo : logoWhite} alt="long vacation logo" width={120} height={40} />
+          <Image src={pathname === "/contact" ? logoRounded : scrolled? logo : logoWhite} alt="long vacation logo" width={120} height={40} className={
+    pathname === "/contact"
+      ? "w-20 h-14"    // 👈 Tailwind size for logoRounded
+      : "w-30 h-auto"    // default sizes
+  }/>
         </Link>
 
         {/* Desktop Menu */}
