@@ -1008,7 +1008,7 @@ export default function MakeBooking() {
                                     href="/terms"
                                     target="_blank"
                                   >
-                                    CTC's terms and conditions
+                                    LongVacation's terms and conditions
                                   </a>
                                 </span>
                               </label>
@@ -1031,7 +1031,7 @@ export default function MakeBooking() {
                                     href="/privacy"
                                     target="_blank"
                                   >
-                                    CTC's privacy policy
+                                    LongVacation's privacy policy
                                   </a>
                                 </span>
                               </label>

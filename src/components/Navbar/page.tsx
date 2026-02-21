@@ -3,8 +3,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Globe, ChevronDown, Check } from "lucide-react";
+import { Menu, X, Globe, ChevronDown, Check, User } from "lucide-react";
+import logoWhite from "../../../public/images/logoWhite.png";
 import logo from "../../../public/images/logonav.png";
+import logoRounded from "../../../public/images/logoRoundedFavicon.png";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +21,7 @@ const Navbar = () => {
   const [currentLang, setCurrentLang] = useState<"EN" | "CN">("EN");
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -108,11 +111,11 @@ const Navbar = () => {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           {/* <img src={logo} alt="Long Vacation Logo" /> */}
-          <Image src={logo} alt="long vacation logo" width={150} height={50} />
+          <Image src={pathname === "/contact" ? logoRounded : scrolled? logo : logoWhite} alt="long vacation logo" width={120} height={40} />
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center justify-center gap-8">
           <ul className="flex space-x-8">
             {navLinks.map((link) => (
               <li key={link.label}>
@@ -132,14 +135,37 @@ const Navbar = () => {
             ))}
             <li>
               {isLoggedIn ? (
-                <button
-                  onClick={handleLogout}
-                  className={`font-medium hover:text-brand-coral ${
-                    isDarkText ? "text-brand-navy" : "text-white"
-                  }`}
+                <div
+                  className="relative"
+                  onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                  onMouseEnter={() => setIsProfileMenuOpen(true)}
+                  onMouseLeave={() => setIsProfileMenuOpen(false)}
                 >
-                  Logout
-                </button>
+                  <button
+                    className={`font-medium hover:text-brand-coral rounded-full p-0.5 border border-brand-green -mt-1 ${
+                      isDarkText ? "text-brand-navy" : "text-white"
+                    }`}
+                  >
+                    <User size={25} />
+                  </button>
+
+                  {isProfileMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
+                      <button
+                        onClick={() => router.push("/tour-book-list")}
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >
+                        Tour Book List
+                      </button>
+                      <button
+                        onClick={handleLogout}
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <Link
                   href="/login"

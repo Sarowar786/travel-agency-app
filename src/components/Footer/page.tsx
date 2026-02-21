@@ -24,7 +24,7 @@ const TikTokIcon = ({ size = 24, className = "" }: { size?: number, className?: 
 const Footer: React.FC = () => {
   return (
     <footer id="contact" className="bg-brand-navy text-white">
-      <TrustBar />
+      {/* <TrustBar /> */}
       <Newsletter variant="navy" />
 
       <div className="pt-6 pb-6">
@@ -91,11 +91,6 @@ const Footer: React.FC = () => {
                   </Link> */}
                 </li>
 
-                <li>
-                  <Link href="/careers" className="hover:text-brand-green transition-colors">
-                    Careers
-                  </Link>
-                </li>
                 <li>
                   <Link href="/privacy-policy" className="hover:text-brand-green transition-colors">
                     Privacy Policy

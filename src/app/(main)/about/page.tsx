@@ -36,7 +36,7 @@ const AboutUs: React.FC = () => {
       </div>
 
       {/* 2. THE MANIFESTO: Us vs Them (Psychology: Differentiation) */}
-      <section className="py-20 px-4 md:px-8 container mx-auto">
+      <section className="py-20 px-4 md:px-8 container mx-auto hidden">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-brand-navy mb-4">The Long Vacation Difference</h2>
           <p className="text-gray-500">Why 50,000+ travelers chose us over the big guys.</p>
@@ -125,21 +125,21 @@ const AboutUs: React.FC = () => {
                       
                       <div className="grid grid-cols-2 gap-6">
                           <div>
-                              <p className="text-4xl font-black text-brand-teal">50k+</p>
+                              <p className="text-4xl font-black text-brand-teal">20k+</p>
                               <p className="text-sm font-bold text-gray-400 uppercase">Happy Travelers</p>
                           </div>
                           <div>
-                              <p className="text-4xl font-black text-brand-teal">8+</p>
+                              <p className="text-4xl font-black text-brand-teal">10+</p>
                               <p className="text-sm font-bold text-gray-400 uppercase">Years Experience</p>
                           </div>
-                          <div>
+                          {/* <div>
                               <p className="text-4xl font-black text-brand-teal">24/7</p>
                               <p className="text-sm font-bold text-gray-400 uppercase">Support Team</p>
                           </div>
                           <div>
                               <p className="text-4xl font-black text-brand-teal">4.9</p>
                               <p className="text-sm font-bold text-gray-400 uppercase">Google Rating</p>
-                          </div>
+                          </div> */}
                       </div>
                   </div>
 
@@ -158,7 +158,7 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* 4. THE TEAM (Psychology: Human Connection) */}
-      <section className="py-20 px-4 md:px-8 container mx-auto">
+      {/* <section className="py-20 px-4 md:px-8 container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-brand-navy mb-4">Meet the Fixers</h2>
             <p className="text-gray-500">Real humans. No chatbots. We reply faster than your ex.</p>
@@ -181,10 +181,10 @@ const AboutUs: React.FC = () => {
                   </div>
               ))}
           </div>
-      </section>
+      </section> */}
 
       {/* 5. AREAS OF EXPERTISE */}
-      <section className="py-20 bg-brand-navy text-white relative overflow-hidden">
+      {/* <section className="py-20 bg-brand-navy text-white relative overflow-hidden">
           <div className="container mx-auto px-4 md:px-8 relative z-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">What We Do Best</h2>
               
@@ -212,7 +212,7 @@ const AboutUs: React.FC = () => {
                   </div>
               </div>
           </div>
-      </section>
+      </section> */}
 
     </div>
   );
